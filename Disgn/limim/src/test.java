@@ -25,7 +25,7 @@ public class test {
         System.out.println(sums);
         for (int i = 0; i < sums.length; i++) {
             System.out.println(sums[i]);
-
+            System.out.println("");
         }
     }
 

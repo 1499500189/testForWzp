@@ -14,4 +14,19 @@ public class TV extends Colleague{
     public void SendMessage(int stateChange) {
 
     }
+
+    @Override
+    public void StartCoffee() {
+
+    }
+
+    @Override
+    public void StopTV() {
+
+    }
+
+    @Override
+    public void UpCurtains() {
+
+    }
 }

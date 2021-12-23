@@ -23,4 +23,19 @@ public class Alarm  extends  Colleague{
         this.GetMediator().GetMessage(stateChange,this.name);
 
     }
+
+    @Override
+    public void StartCoffee() {
+
+    }
+
+    @Override
+    public void StopTV() {
+
+    }
+
+    @Override
+    public void UpCurtains() {
+
+    }
 }

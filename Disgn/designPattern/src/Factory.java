@@ -1,5 +1,7 @@
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author
@@ -7,16 +9,13 @@ import java.util.Date;
  */
 public class Factory {
     public static void main(String[] args) {
-        Calendar  cal =Calendar.getInstance();
-        System.out.println(cal.get(Calendar.YEAR));
-        System.out.println(cal.get(Calendar.DATE));
-        Date date = new Date();
-        int year = date.getYear();
-        System.out.println(year);
-        long time = date.getTime();
-        System.out.println(time);
-        //谁说五uu大大多好都会受到啥      大黄蜂护肤水水水水水水dosage
+        Map<String, Object> map = new HashMap<>();
+        map.put("d",90);
 
+        Object o = map.get("0");
+        System.out.println(0);
+        System.out.println(o);
 
+        System.out.println("\"\"\"\" 故事的小童话  dv");
     }
 }
