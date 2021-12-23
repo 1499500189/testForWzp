@@ -13,6 +13,7 @@ public class test {
     private RedisTemplate redisTemplate;
 
     public  void testtt(){
+        System.out.println();
     }
 
     public static void main(String[] args) {
