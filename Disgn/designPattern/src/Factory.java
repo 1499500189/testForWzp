@@ -11,7 +11,6 @@ public class Factory {
     public static void main(String[] args) {
         Map<String, Object> map = new HashMap<>();
         map.put("d",90);
-
         Object o = map.get("0");
         System.out.println(0);
         System.out.println(o);
