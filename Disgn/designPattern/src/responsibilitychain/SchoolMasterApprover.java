@@ -11,6 +11,7 @@ public class SchoolMasterApprover extends  Approver {
             System.out.println("请求编号 id = " +purchaseRequest.getId() +"  被  "+this.name+" 处理 ");
         }else {
             approver.processRequest(purchaseRequest);
+            System.out.println("dd");
         }
     }
 }
