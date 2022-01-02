@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wzp.ttt.mon.dao.UserInfoDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.wzp.ttt.mon.entity.UserInfoEntity" id="userInfoMap">
+        <result property="id" column="id"/>
+        <result property="namw" column="namw"/>
+        <result property="age" column="age"/>
+        <result property="location" column="location"/>
+		<collection property="stationEntity" column="{id=id}" ofType="com.wzp.ttt.mon.entity.StationEntity"
+					select="com.wzp.ttt.mon.dao.UserInfoDao.selByPid" >
+			<result property="id" column="id"/>
+			<result property="count" column="count"/>
+			<result property="locos" column="locos"/>
+		</collection>
+    </resultMap>
+
+	<select id="selectByMapId" resultMap="userInfoMap">
+		select  * from  user_info where  id=#{id}
+
+
+	</select>
+	<select id="selByPid" resultType="com.wzp.ttt.mon.entity.StationEntity">
+		select  * from  station where id=#{id}
+	</select>
+
+
+</mapper>
