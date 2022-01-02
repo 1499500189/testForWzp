@@ -14,6 +14,7 @@ public class Factory {
         Object o = map.get("0");
         System.out.println(0);
         System.out.println(o);
+        System.out.println("sda ");
 
         System.out.println("\"\"\"\" 故事的小童话  dv");
     }
