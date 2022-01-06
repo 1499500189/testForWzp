@@ -13,9 +13,11 @@ import java.util.Map;
  */
 public class test {
     public static void main(String[] args) throws IOException {
-        String string = getString();
+        String s ="dasdasdasfweqafwefef";
+        System.out.println(s.length());
 
     }
+
     private static String getString() throws IOException {
         BufferedReader br;
         InputStreamReader isr = new InputStreamReader(System.in);
