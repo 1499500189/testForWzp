@@ -7,11 +7,13 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.wzp.user.benmon.dao.UserInfoDao;
+import com.wzp.user.benmon.entity.FileTempCusEntity;
 import com.wzp.user.benmon.entity.UserInfoEntity;
 import com.wzp.user.benmon.service.UserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service/*("userInfoService")*/
@@ -62,6 +64,18 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoDao, UserInfoEntity
         PageInfo<UserInfoEntity> userInfoEntityPageInfo = new PageInfo<>(userInfoEntities);
 
       return userInfoEntityPageInfo;
+
+    }
+
+    @Override
+    public void insertFileInfo() {
+        ArrayList<FileTempCusEntity> fs = new ArrayList<>();
+        FileTempCusEntity f = new FileTempCusEntity();
+        f.setTempId(1);
+
+
+        fs.add();
+
 
     }
 }

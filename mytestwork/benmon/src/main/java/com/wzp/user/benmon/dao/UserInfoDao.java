@@ -4,9 +4,11 @@ package com.wzp.user.benmon.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
+import com.wzp.user.benmon.entity.FileTempCusEntity;
 import com.wzp.user.benmon.entity.StationEntity;
 import com.wzp.user.benmon.entity.UserInfoEntity;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -28,4 +30,6 @@ public interface UserInfoDao extends BaseMapper<UserInfoEntity> {
 
     List<UserInfoEntity> selectByMy(Object o);
  //   Long  selectByMy_COUNT(Object o);
+
+     void   sss(@Param("list")List<FileTempCusEntity> list);
 }

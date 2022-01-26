@@ -24,5 +24,7 @@ public interface UserInfoService extends IService<UserInfoEntity> {
 
     PageInfo<UserInfoEntity> listAllLimit();
 
+    void insertFileInfo();
+
 }
 

@@ -30,7 +30,19 @@
 	</select>
 	<select id="selectByMy_COUNT" resultType="Long">
 		select  count(*) from   user_info where  id=1
+
 	</select>
+	<insert id="sss">
+		insert IGNORE into crm_temp_cus (
+		telephone,file_id
+		) values
+		<foreach collection="list" item="item" index="index" separator=",">
+			(
+			#{item.telephone} ,
+			#{item.fileId}
+			)
+		</foreach>
+	</insert>
 
 
 </mapper>
