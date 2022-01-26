@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.modules.employee.dao.GeneratorGroupsDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.renren.modules.employee.entity.GeneratorGroupsEntity" id="generatorGroupsMap">
+        <result property="groupsId" column="groups_id"/>
+        <result property="groupsName" column="groups_name"/>
+        <result property="groupsInt" column="groups_int"/>
+    </resultMap>
+    <select id="queryByName" resultType="io.renren.modules.employee.entity.GeneratorGroupsEntity">
+        select  * from  generator_groups where groups_int=#{groups}
+
+
+    </select>
+    <select id="queryByNameTrue" resultType="io.renren.modules.employee.entity.GeneratorGroupsEntity">
+        select  * from  generator_groups where groups_name=#{groups}
+
+
+    </select>
+
+</mapper>

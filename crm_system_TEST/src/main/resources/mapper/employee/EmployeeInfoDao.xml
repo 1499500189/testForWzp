@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.modules.employee.dao.EmployeeInfoDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.renren.modules.employee.entity.EmployeeInfoEntity" id="employeeInfoMap">
+        <result property="id" column="id"/>
+        <result property="company" column="company"/>
+        <result property="department" column="department"/>
+        <result property="groups" column="groups"/>
+        <result property="roleId" column="role_id"/>
+        <result property="codes" column="codes"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="parentId" column="parent_id"/>
+        <result property="userId" column="user_id"/>
+    </resultMap>
+
+    <select id="selectPageAll" resultType="io.renren.modules.employee.entity.EmployeeInfoEntity" >
+        select ei.id,ei.company,ei.create_time,ei.update_time, su.username,su.status,gd.department_name,ei.department,ei.groups,
+        gg.groups_name ,sr.role_name as roles  from employee_info  as ei
+        left join  sys_user as su on  ei.user_id = su.user_id
+        left join  generator_department as gd on ei.department=gd.department_int
+        left join  generator_groups as gg on ei.groups  = gg.groups_int
+        left join  sys_role as sr on ei.role_id =  sr.role_id
+      <where>
+            ei.codes like CONCAT(#{codes,jdbcType=VARCHAR},'%' )
+           <if test="department!=null and department!=''">
+            and department=#{department}
+           </if>
+          <if test="groups!=null and groups!=''">
+              and groups=#{groups}
+          </if>
+          <if test="role_name!=null and role_name!=''">
+              and role_name=#{role_name}
+          </if>
+          <if test="username!=null and username!=''">
+              and username like CONCAT('%',#{username,jdbcType=VARCHAR},'%' )
+          </if>
+           and username!=#{currentUsername}
+      </where>
+        ORDER BY status DESC,sr.role_id ASC,gd.department_id ASC
+        ${ew.customSqlSegment}
+    </select>
+<!--使用username字段模糊查询-->
+
+    <select id="selectEmployeeInfo" resultType="io.renren.modules.employee.entity.EmployeeInfoEntity" >
+        select ei.id,ei.company,ei.create_time,ei.update_time, su.username,su.status,gd.department_name,ei.department,ei.groups,
+               gg.groups_name,sr.role_name as roles  from employee_info  as ei
+            left join  sys_user as su on  ei.user_id = su.user_id
+            left join  generator_department as gd on ei.department=gd.department_int
+            left join  generator_groups as gg on ei.groups  = gg.groups_int
+            left join  sys_role as sr on ei.role_id =  sr.role_id  where id=#{id}
+    </select>
+
+    <select id="queryUserId"  resultType="io.renren.modules.employee.entity.EmployeeInfoEntity" >
+        select * from employee_info where user_id = #{userId}
+    </select>
+
+
+    <select id="selectNextLevel" resultType="io.renren.modules.employee.entity.EmployeeInfoEntity" >
+        select ei.id,ei.company,ei.create_time,ei.update_time, su.username,su.status,gd.department_name as departmentName,
+        gg.groups_name as groupsName,ei.department,ei.groups,su.user_id,sr.role_name as roles , ei.codes as codes from employee_info  as ei
+        left join  sys_user as su on  ei.user_id = su.user_id
+        left join  generator_department as gd on ei.department=gd.department_int
+        left join  generator_groups as gg on ei.groups  = gg.groups_int
+        left join  sys_role as sr on ei.role_id =  sr.role_id
+        ${ew.customSqlSegment}
+    </select>
+    <select id="getAllEmployeeList" resultType="io.renren.modules.employee.entity.EmployeeInfoEntity">
+        select ei.id, su.username,su.status,gd.department_name ,ei.groups,ei.department,
+        gg.groups_name ,sr.role_name as roles , ei.codes as codes from employee_info  as ei
+        left join  sys_user as su on  ei.user_id = su.user_id
+        left join  generator_department as gd on ei.department=gd.department_int
+        left join  generator_groups as gg on ei.groups  = gg.groups_int
+        left join  sys_role as sr on ei.role_id =  sr.role_id
+
+    </select>
+
+</mapper>

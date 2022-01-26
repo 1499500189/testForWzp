@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.modules.employee.dao.GeneratorDepartmentDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.renren.modules.employee.entity.GeneratorDepartmentEntity" id="generatorDepartmentMap">
+        <result property="departmentId" column="department_id"/>
+        <result property="departmentName" column="department_name"/>
+        <result property="departmentInt" column="department_int"/>
+    </resultMap>
+    <select id="queryByName" resultType="io.renren.modules.employee.entity.GeneratorDepartmentEntity">
+        select  * from  generator_department where department_int=#{department}
+
+
+    </select>
+    <select id="queryByNameTrue" resultType="io.renren.modules.employee.entity.GeneratorDepartmentEntity">
+        select  * from  generator_department where department_name=#{department}
+
+
+    </select>
+
+</mapper>

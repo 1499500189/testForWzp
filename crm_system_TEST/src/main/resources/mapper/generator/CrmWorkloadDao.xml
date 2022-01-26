@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.modules.generator.dao.CrmWorkloadDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.renren.modules.generator.entity.CrmWorkloadEntity" id="crmWorkloadMap">
+        <result property="id" column="id"/>
+        <result property="employeeId" column="employee_id"/>
+        <result property="createTime" column="create_time"/>
+        <result property="operationDate" column="operation_date"/>
+        <result property="exhaledVolume" column="exhaled_volume"/>
+        <result property="onCapacity" column="on_capacity"/>
+        <result property="userId" column="user_id"/>
+    </resultMap>
+    <select id="selectWorkloadList" resultMap="crmWorkloadMap">
+        select
+        cwl.id
+        ,cwl.employee_id
+        ,cwl.operation_date
+        ,cwl.exhaled_volume
+        ,cwl.on_capacity
+        ,cwl.user_id
+        ,su.username
+        from crm_workload  as cwl
+        left join sys_user as su on su.user_id=cwl.user_id
+        left join employee_info as ei on su.user_id=ei.user_id
+        <where>
+            <if test="params.username!=null and params.username!=''">
+                and su.username like CONCAT('%',#{params.username},'%')
+            </if>
+            <if test="params.startTime != null and params.startTime!=''">
+                and cwl.operation_date &gt;=#{params.startTime}
+            </if>
+            <if test="params.endTime!=null and params.endTime!=''">
+                and cwl.operation_date &lt;= #{params.endTime}
+            </if>
+            <if test="params.emList != null  and params.emList.size>0"  >
+                and ( cwl.user_id in(
+                <foreach collection="params.emList" item="item" index="index" separator="," >
+                    #{item.userId}
+                </foreach>)
+                )
+            </if>
+        </where>
+
+
+    </select>
+
+
+</mapper>

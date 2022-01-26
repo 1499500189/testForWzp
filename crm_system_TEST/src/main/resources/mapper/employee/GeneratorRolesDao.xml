@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.modules.employee.dao.GeneratorRolesDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.renren.modules.employee.entity.GeneratorRolesEntity" id="generatorRolesMap">
+        <result property="rolesId" column="roles_id"/>
+        <result property="rolesName" column="roles_name"/>
+        <result property="rolesInt" column="roles_int"/>
+    </resultMap>
+
+
+</mapper>

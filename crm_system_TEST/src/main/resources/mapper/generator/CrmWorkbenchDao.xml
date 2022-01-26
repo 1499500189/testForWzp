@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.modules.generator.dao.CrmWorkbenchDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.renren.modules.generator.entity.CrmWorkbenchEntity" id="crmWorkbenchMap">
+        <result property="id" column="id"/>
+        <result property="processingDate" column="processing_date"/>
+        <result property="createTime" column="create_time"/>
+        <result property="projectId" column="project_id"/>
+        <result property="reducedAmount" column="reduced_amount"/>
+        <result property="packageAmount" column="package_amount"/>
+        <result property="downAmount" column="down_amount"/>
+        <result property="totalPoints" column="total_points"/>
+        <result property="numberAchievements" column="number_achievements"/>
+        <result property="userId" column="user_id"/>
+        <result property="telephone" column="telephone"/>
+        <result property="isTrue" column="is_true"/>
+    </resultMap>
+    <select id="selectWorkbenchList" resultType="io.renren.modules.generator.entity.CrmWorkbenchEntity">
+        select cw.id,cw.processing_date,cp.project_name,cc.category_name,cw.reduced_amount,cw.package_amount,
+           cw.down_amount,cw.total_points,cw.number_achievements,cw.telephone,cw.is_true,su.username ,cw.job_number
+        ,cw.remarks
+        from crm_workbench  as cw
+        left join crm_category as cc on cw.category_id=cc.category_id
+        left join crm_project as cp on cw.project_id=cp.project_id
+        left join sys_user as su on su.user_id=cw.user_id
+        left join employee_info as ei on su.user_id=ei.user_id
+        <where>
+            <if test="params.username!=null and params.username!=''">
+                and su.username like CONCAT('%',#{params.username},'%')
+            </if>
+            <if test="params.telephone!=null and params.telephone!=''">
+                and cw.telephone like CONCAT('%',#{params.telephone},'%')
+            </if>
+            <if test="params.startTime != null and params.startTime!=''">
+                and cw.processing_date &gt;=#{params.startTime}
+            </if>
+            <if test="params.endTime!=null and params.endTime!=''">
+                and cw.processing_date &lt;= #{params.endTime}
+            </if>
+            <if test="params.projectId!=null and params.projectId!=''">
+                and cp.project_id like CONCAT('%',#{params.projectId  },'%')
+            </if>
+            <if test="params.emList != null  and params.emList.size>0"  >
+                and ( cw.user_id in(
+                <foreach collection="params.emList" item="item" index="index" separator="," >
+                    #{item.userId}
+                </foreach>)
+                )
+            </if>
+        </where>
+        order by cw.create_time desc
+    </select>
+    <select id="selectColumn" resultMap="crmWorkbenchMap">
+        select cw.id,cw.processing_date,cp.project_name,cc.category_name,cw.reduced_amount,cw.package_amount,
+        cw.down_amount,cw.total_points,cw.number_achievements,cw.telephone,cw.is_true,su.username ,cw.job_number
+        ,cw.remarks
+        from crm_workbench  as cw
+        left join crm_category as cc on cw.category_id=cc.category_id
+        left join crm_project as cp on cw.project_id=cp.project_id
+        left join sys_user as su on su.user_id=cw.user_id
+        <where>
+            <if test="params.startTime != null and params.startTime!=''">
+                and cw.processing_date &gt;=#{params.startTime}
+            </if>
+            <if test="params.endTime!=null and params.endTime!=''">
+                and cw.processing_date &lt;= #{params.endTime}
+            </if>
+        </where>
+        order by cw.create_time desc
+
+    </select>
+
+    <sql id="getSummaryNoPage">
+        SELECT
+        ei.id,su.username as username,
+        cwl.operation_date,
+        cwb.processing_date,
+        ifnull( sum( cwb.number_achievements ),0)  AS 'number_achievements',
+        ifnull(   sum(cwl.exhaled_volume) ,0)AS 'exhaled_volume' ,
+        ifnull(   sum(cwl.on_capacity) ,0)AS 'on_capacity'
+        FROM
+        (
+        SELECT
+        cwb.user_id,
+        sum( cwb.number_achievements ) AS 'number_achievements',
+        DATE_FORMAT( cwb.processing_date, '%Y-%m-%d' ) AS processing_date
+        FROM
+        crm_workbench AS  cwb
+        <where>
+            <if test="params.startTime!=null and params.startTime!=''">
+                and cwb.processing_date >=#{params.startTime}
+            </if>
+            <if test="params.endTime!=null and params.endTime!=''">
+                and cwb.processing_date &lt;= #{params.endTime}
+            </if>
+        </where>
+        group By cwb.processing_date, cwb.user_id
+        ) AS cwb
+        RIGHT JOIN  (
+        SELECT
+        DATE_FORMAT( cwl.operation_date, '%Y-%m-%d' ) AS operation_date,
+        cwl.user_id,
+        sum( cwl.exhaled_volume ) AS 'exhaled_volume',
+        sum( cwl.on_capacity ) AS 'on_capacity'
+        FROM
+        crm_workload AS cwl
+        <where>
+            <if test="params.startTime!=null and params.startTime!=''">
+                and cwl.operation_date >=#{params.startTime}
+            </if>
+            <if test="params.endTime!=null and params.endTime!=''">
+                and cwl.operation_date &lt;= #{params.endTime}
+            </if>
+        </where>
+        GROUP BY
+        cwl.operation_date,
+        cwl.user_id
+
+        )   as cwl ON  cwl.user_id = cwb.user_id
+        and cwl.operation_date = cwb.processing_date
+        LEFT JOIN employee_info AS ei ON cwl.user_id = ei.user_id
+        LEFT JOIN sys_user AS  su ON su.user_id = ei.user_id
+        <where>
+            <if test="params.username!=null and params.username!=''">
+                and su.username like CONCAT('%' ,#{params.username,jdbcType=VARCHAR},'%' )
+            </if>
+        </where>
+        GROUP BY cwl.operation_date,cwl.user_id
+    </sql>
+    <select id="getSummaryList" resultType="io.renren.modules.generator.entity.vo.ChartVo">
+            <include refid="getSummaryNoPage"></include>
+        <!--  group by  cwl.processing_date-->
+<!--            group By ei.department,ei.groups-->
+    </select>
+    <select id="getSummaryListNoPage" resultType="io.renren.modules.generator.entity.vo.ChartVo">
+        <include refid="getSummaryNoPage"></include>
+    </select>
+
+
+</mapper>
