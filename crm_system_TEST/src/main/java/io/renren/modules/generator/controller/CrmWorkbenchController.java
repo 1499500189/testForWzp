@@ -80,14 +80,18 @@ public class CrmWorkbenchController extends AbstractController {
     @RequestMapping("/save")
     @SysLog("工作台保存信息")
     @RequiresPermissions("generator:crmworkbench:save")
-    public R save(@RequestBody CrmWorkbenchEntity crmWorkbench){
+     public  R save (@RequestBody CrmWorkbenchEntity crmWorkbench){
         logger.info(crmWorkbench.toString());
         crmWorkbench.setCreateTime(new Date());
         crmWorkbench.setUserId(getUserId());
         crmWorkbench.setIsTrue("是");
 		//crmWorkbenchService.save(crmWorkbench);
-        crmWorkbenchService.saveWorkbenchEntity(crmWorkbench,getUser());
-
+        for(int i = 0 ;i<500000;i++) {
+            Date date = new Date(i);
+            crmWorkbench.setCreateTime(date);
+            crmWorkbench.setProcessingDate(date);
+            crmWorkbenchService.saveWorkbenchEntity(crmWorkbench, getUser());
+        }
         return R.ok();
     }
 

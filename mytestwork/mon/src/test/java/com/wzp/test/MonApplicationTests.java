@@ -7,11 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.*;
-@RunWith(SpringRunner.class)
-/*@RunWith(SpringJUnit4ClassRunner.class)*/
-/*@ActiveProfiles()*/
 @SpringBootTest
-@SpringBootConfiguration
 class MonApplicationTests {
 
     @Test
@@ -49,7 +45,15 @@ class MonApplicationTests {
 
     @Test
     void test3(){
+        Person person = new Person();
+        person.addCourse(new Course("1",false));
+        Set coursers = person.getCoursers();
+        coursers.add(20);
 
+        coursers.remove("1");
+/*        String[] s  =  {"23","432"};
+        List<String> strings = Arrays.asList(s);
+        strings.add("sda");*/
     }
 
 }

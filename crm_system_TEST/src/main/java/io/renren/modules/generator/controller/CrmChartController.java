@@ -48,13 +48,15 @@ public class CrmChartController extends AbstractController {
     @GetMapping("/list")
     @RequiresPermissions("generator:chart:list")
     @ApiOperation("获取到图表信息")
-    public R list(@RequestParam Map<String, Object> params) {
+    public R list(@RequestParam Map<String, Object> paramsn) {
+
+        System.out.println(paramsn);
         SysUserEntity user = getUser();
 
        // List<ChartVo> chartList = crmWorkbenchService.getSummaryList(params, user);
        // return R.ok().put("chartList", chartList);
 
-        IPage<ChartVo> cPage =  crmWorkbenchService.getSummaryList(params,user);
+        IPage<ChartVo> cPage =  crmWorkbenchService.getSummaryList(paramsn,user);
         if (cPage == null) {
             cPage = new Page<>();
             PageUtils pageUtils = new PageUtils(cPage);

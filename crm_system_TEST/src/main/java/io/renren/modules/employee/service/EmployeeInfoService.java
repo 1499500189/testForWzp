@@ -27,26 +27,26 @@ public interface EmployeeInfoService extends IService<EmployeeInfoEntity> {
     IPage<EmployeeInfoEntity> selectPageAll(Page<EmployeeInfoEntity> page);
     IPage<EmployeeInfoEntity> selectPageAllQuery(Page<EmployeeInfoEntity> page, @Param(Constants.WRAPPER) QueryWrapper<EmployeeInfoEntity> ew, Map<String,Object> params, String codes, String currentUsername);
 
-
+    @Deprecated
     IPage<EmployeeInfoEntity> getQueryPage(String currentRoleName, Map<String, Object> params, SysUserEntity user);
 
 
 
-
+    @Deprecated
     EmployeeInfoEntity getInfo(String currentRoleName, SysUserEntity user, Long id);
-
+    @Deprecated
     void saveEmployeeInfo(String currentRoleName, SysUserEntity currentUser, EmployeeInfoEntity employeeInfo);
-
+    @Deprecated
     String reset(Long id, SysUserEntity currentUser);
-
+    @Deprecated
     void updateEmployeeInfo(String currentRoleName, SysUserEntity currentUser, EmployeeInfoEntity employeeInfo);
-
+    @Deprecated
     boolean isChangePassword(SysUserEntity currentUser);
-
+    @Deprecated
     EmployeeInfoEntity queryUserId(Long userId);
-
+    @Deprecated
     List<TreeViewVo> listByParentId(Long i);
-
+    @Deprecated
     List<EmployeeInfoEntity> getNextLevelEmployeeList(SysUserEntity user);
 
     List<EmployeeInfoEntity> getNextLevelAllEmployeeList(SysUserEntity user);

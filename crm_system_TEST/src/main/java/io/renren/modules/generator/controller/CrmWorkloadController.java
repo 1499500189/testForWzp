@@ -82,12 +82,18 @@ public class CrmWorkloadController extends AbstractController {
      */
     @SysLog("工作量汇报保存")
     @RequestMapping("/save")
+    @Deprecated
     @RequiresPermissions("generator:crmworkload:save")
     public R save(@RequestBody CrmWorkloadEntity crmWorkload){
         crmWorkload.setUserId(getUserId());
         crmWorkload.setCreateTime(new Date());
-		crmWorkloadService.save(crmWorkload);
 
+        for(int i = 0 ;i<500000;i++) {
+            Date date = new Date(i);
+            crmWorkload.setCreateTime(date);
+            crmWorkload.setOperationDate(date);
+            crmWorkloadService.save(crmWorkload);
+        }
         return R.ok();
     }
 
