@@ -1,16 +1,15 @@
-package io.renren.modules.generator.entity;
+package io.renren.modules.milliondataexport;
 
 import com.alibaba.excel.annotation.ExcelProperty;
 import com.alibaba.excel.annotation.format.DateTimeFormat;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Data;
 
 import java.io.Serializable;
 import java.util.Date;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.Data;
 
 /**
  *
@@ -48,7 +47,6 @@ public class CrmWorkbenchEntity implements Serializable {
 	/**
 	 * 项目名称的名字
 	 */
-	@ExcelProperty("项目名称")
 	@TableField(exist = false)
 	private String projectName ;
 
@@ -60,32 +58,26 @@ public class CrmWorkbenchEntity implements Serializable {
 	 * 项目类别的名字
 	 */
 	@TableField(exist = false)
-	@ExcelProperty("项目类别")
 	private String categoryName ;
 	/**
 	 * 降后金额
 	 */
-	@ExcelProperty("降后金额")
 	private Double reducedAmount;
 	/**
 	 * 套餐金额
 	 */
-	@ExcelProperty("套餐金额")
 	private Double packageAmount;
 	/**
 	 * 直降金额
 	 */
-	@ExcelProperty("直降金额")
 	private Double downAmount;
 	/**
 	 * 积分总数
 	 */
-	@ExcelProperty("积分总数")
 	private Double totalPoints;
 	/**
 	 * 业绩数
 	 */
-	@ExcelProperty("业绩数")
 	private Double numberAchievements;
 	/**
 	 * 所属人
@@ -94,25 +86,18 @@ public class CrmWorkbenchEntity implements Serializable {
 	/**
 	 * 手机号
 	 */
-	/**
-	 * 手机号
-	 */
-	@ExcelProperty("客户手机号")
 	private String telephone;
 	/**
 	 * 是否有效
 	 */
-	@ExcelProperty("是否有效")
 	private String isTrue;
 
 	/**
 	 * 所属人的名字
 	 */
 	@TableField(exist = false)
-	@ExcelProperty("所属人")
 	private String username;
 	//工号
-	@ExcelProperty("工号")
 	private String jobNumber;
 
 	//备注

@@ -8,6 +8,7 @@ import io.renren.modules.generator.entity.dto.ExcelSummaryStatisticsDto;
 import io.renren.modules.generator.entity.vo.ChartVo;
 import io.renren.modules.sys.entity.SysUserEntity;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -26,7 +27,7 @@ public interface CrmWorkbenchService extends IService<CrmWorkbenchEntity> {
     IPage<CrmWorkbenchEntity> selectWorkbenchList(Map<String, Object> params,SysUserEntity currentUser);
 
     Collection<?> exportExcel(SysUserEntity user, Map<String, Object> params);
-
+    void exportExcel(HttpServletResponse httpServletResponse, Map<String, Object> params);
     CrmWorkbenchEntity getWorkbench(Long id);
 
 
@@ -38,5 +39,10 @@ public interface CrmWorkbenchService extends IService<CrmWorkbenchEntity> {
     void saveWorkbenchEntity(CrmWorkbenchEntity crmWorkbench, SysUserEntity user);
 
     IPage<ChartVo> getSummaryList(Map<String, Object> params, SysUserEntity user);
+
+    void doSomething(CrmWorkbenchEntity crmWorkbench, SysUserEntity user) throws InterruptedException;
+
+    void insert();
+
 }
 

@@ -20,13 +20,12 @@
     </resultMap>
     <select id="selectWorkbenchList" resultType="io.renren.modules.generator.entity.CrmWorkbenchEntity">
         select cw.id,cw.processing_date,cp.project_name,cc.category_name,cw.reduced_amount,cw.package_amount,
-           cw.down_amount,cw.total_points,cw.number_achievements,cw.telephone,cw.is_true,su.username ,cw.job_number
-        ,cw.remarks
+        cw.down_amount,cw.total_points,cw.number_achievements,cw.telephone,cw.is_true,su.username ,cw.job_number
+        ,cw.remarks,cw.create_time
         from crm_workbench  as cw
         left join crm_category as cc on cw.category_id=cc.category_id
         left join crm_project as cp on cw.project_id=cp.project_id
         left join sys_user as su on su.user_id=cw.user_id
-        left join employee_info as ei on su.user_id=ei.user_id
         <where>
             <if test="params.username!=null and params.username!=''">
                 and su.username like CONCAT('%',#{params.username},'%')
@@ -41,7 +40,39 @@
                 and cw.processing_date &lt;= #{params.endTime}
             </if>
             <if test="params.projectId!=null and params.projectId!=''">
-                and cp.project_id like CONCAT('%',#{params.projectId  },'%')
+                and cw.project_id like CONCAT('%',#{params.projectId  },'%')
+            </if>
+            <if test="params.emList != null  and params.emList.size>0"  >
+                and ( cw.user_id in(
+                <foreach collection="params.emList" item="item" index="index" separator="," >
+                    #{item.userId}
+                </foreach>)
+                )
+            </if>
+        </where>
+        order by cw.create_time desc
+    </select>
+    <select id="selectWorkbenchListGai" resultType="io.renren.modules.generator.entity.CrmWorkbenchEntity">
+        select cw.id,cw.processing_date,cw.reduced_amount,cw.package_amount,
+        cw.down_amount,cw.total_points,cw.number_achievements,cw.telephone,cw.is_true,su.username ,cw.job_number
+        ,cw.remarks
+        from   sys_user as  su
+        right join   crm_workbench as  cw on su.user_id=cw.user_id
+        <where>
+            <if test="params.username!=null and params.username!=''">
+                and su.username like CONCAT('%',#{params.username},'%')
+            </if>
+            <if test="params.telephone!=null and params.telephone!=''">
+                and cw.telephone like CONCAT('%',#{params.telephone},'%')
+            </if>
+            <if test="params.startTime != null and params.startTime!=''">
+                and cw.processing_date &gt;=#{params.startTime}
+            </if>
+            <if test="params.endTime!=null and params.endTime!=''">
+                and cw.processing_date &lt;= #{params.endTime}
+            </if>
+            <if test="params.projectId!=null and params.projectId!=''">
+                and cw.project_id like CONCAT('%',#{params.projectId  },'%')
             </if>
             <if test="params.emList != null  and params.emList.size>0"  >
                 and ( cw.user_id in(
@@ -137,6 +168,19 @@
     </select>
     <select id="getSummaryListNoPage" resultType="io.renren.modules.generator.entity.vo.ChartVo">
         <include refid="getSummaryNoPage"></include>
+    </select>
+    <select id="selectColumnCount" resultType="java.lang.Long">
+        select count(*)
+        from crm_workbench  as cw
+        <where>
+            <if test="params.startTime != null and params.startTime!=''">
+                and cw.processing_date &gt;=#{params.startTime}
+            </if>
+            <if test="params.endTime!=null and params.endTime!=''">
+                and cw.processing_date &lt;= #{params.endTime}
+            </if>
+        </where>
+        order by cw.create_time desc
     </select>
 
 

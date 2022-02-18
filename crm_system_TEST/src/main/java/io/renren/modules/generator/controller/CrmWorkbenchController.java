@@ -80,17 +80,15 @@ public class CrmWorkbenchController extends AbstractController {
     @RequestMapping("/save")
     @SysLog("工作台保存信息")
     @RequiresPermissions("generator:crmworkbench:save")
-     public  R save (@RequestBody CrmWorkbenchEntity crmWorkbench){
-        logger.info(crmWorkbench.toString());
+     public  R save (@RequestBody CrmWorkbenchEntity crmWorkbench) {
+       // logger.info(crmWorkbench.toString());
         crmWorkbench.setCreateTime(new Date());
         crmWorkbench.setUserId(getUserId());
         crmWorkbench.setIsTrue("是");
-		//crmWorkbenchService.save(crmWorkbench);
-        for(int i = 0 ;i<500000;i++) {
-            Date date = new Date(i);
-            crmWorkbench.setCreateTime(date);
-            crmWorkbench.setProcessingDate(date);
-            crmWorkbenchService.saveWorkbenchEntity(crmWorkbench, getUser());
+        try {
+            crmWorkbenchService.doSomething(crmWorkbench, getUser());
+        } catch (InterruptedException e) {
+            throw  new RRException("12341",41241);
         }
         return R.ok();
     }
@@ -161,18 +159,9 @@ public class CrmWorkbenchController extends AbstractController {
 
     //导出文件
     @RequestMapping("/exportExcel")
-    @SysLog("工作台导出文件")
     @RequiresPermissions("generator:crmworkbench:exportexcel")
     public void exportExcel(@RequestParam Map<String, Object> params, HttpServletResponse response) throws Exception {
-            if (params.get("startTime") == null || params.get("endTime") == null) {
-            throw new RRException("时间间隔不能为空", 403);
-            }
-            Date startTime = DateTime.of((String) params.get("startTime"), "yyyy-MM-dd HH:mm:ss"); //获取到开始的时间
-            Date endTime = DateTime.of((String) params.get("endTime"), "yyyy-MM-dd HH:mm:ss");  //获取到结束的时间
-            if ((endTime.getTime() - startTime.getTime()) > 1000 * 60 * 60 * 24 * 31L) {  //转换成毫秒 ，减去31天的毫秒数 ，之后就是
-                throw new RRException("时间的间隔过大", 403);
-            }
-
+/*
         //导出excel
         try {
             response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
@@ -184,7 +173,8 @@ public class CrmWorkbenchController extends AbstractController {
             //  MultipartFile file =     crmTransactionRecordService.exportExcel(getUser(),params);
         } catch (IOException e) {
             throw new RRException("数据导出失败", 403);
-        }
+        }*/
+        crmWorkbenchService.exportExcel(response,params);
 
     }
 

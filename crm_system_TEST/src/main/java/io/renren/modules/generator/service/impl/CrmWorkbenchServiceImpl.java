@@ -3,9 +3,11 @@ package io.renren.modules.generator.service.impl;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.renren.common.exception.RRException;
 import io.renren.common.utils.Constant;
+import io.renren.modules.app.service.UserService;
 import io.renren.modules.employee.constant.ConstantRoles;
 import io.renren.modules.employee.entity.EmployeeInfoEntity;
 import io.renren.modules.employee.service.EmployeeInfoService;
+import io.renren.modules.generator.controller.ExportExcelListener;
 import io.renren.modules.generator.entity.dto.ExcelSummaryStatisticsDto;
 import io.renren.modules.generator.entity.dto.ExcelWorkbenchDto;
 import io.renren.modules.generator.entity.CrmCategoryEntity;
@@ -19,12 +21,16 @@ import io.renren.modules.sys.entity.SysUserEntity;
 import io.renren.modules.sys.service.SysRoleService;
 import io.renren.modules.sys.service.SysUserRoleService;
 import io.renren.modules.sys.service.SysUserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -39,6 +45,10 @@ import io.renren.common.utils.Query;
 import io.renren.modules.generator.dao.CrmWorkbenchDao;
 import io.renren.modules.generator.entity.CrmWorkbenchEntity;
 import io.renren.modules.generator.service.CrmWorkbenchService;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.servlet.http.HttpServletResponse;
 
 
 @Service("crmWorkbenchService")
@@ -55,6 +65,10 @@ public class CrmWorkbenchServiceImpl extends ServiceImpl<CrmWorkbenchDao, CrmWor
     private SysUserRoleService sysUserRoleService;
     @Autowired
     private SysRoleService sysRoleService;
+    @Autowired
+    private  CrmWorkbenchDao crmWorkbenchDao;
+    protected Logger log = LoggerFactory.getLogger(getClass());
+
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -88,6 +102,8 @@ public class CrmWorkbenchServiceImpl extends ServiceImpl<CrmWorkbenchDao, CrmWor
             if (telephone.length() >= 7) {
                 record.setTelephone(telephone.substring(0, 3) + "****" + telephone.substring(7));
             }
+
+
         }
 
         return workbenchList;
@@ -149,19 +165,50 @@ public class CrmWorkbenchServiceImpl extends ServiceImpl<CrmWorkbenchDao, CrmWor
         return c;
     }
     @Override
-    public List<ExcelWorkbenchDto> exportExcel(SysUserEntity user, Map<String, Object> params) {
+    public List<CrmWorkbenchEntity> exportExcel(SysUserEntity user, Map<String, Object> params) {
+
 
         //导出所有，使用不分页的方法
         List<CrmWorkbenchEntity> records = baseMapper.selectColumn(params);
+
+
+  /*      //使用分页方法
+   for (int i=0 ;i<100 ;i++){
+    Page<CrmProjectEntity> iPage = new Page<>(i+1,10000);
+    IPage<CrmWorkbenchEntity> workbenchList = baseMapper.selectWorkbenchList(iPage, params);
+    workbenchList.getRecords();
+   }*/
         //创建ExcelDictDTO列表，将Dict列表转换成ExcelDictDTO列表
-        ArrayList<ExcelWorkbenchDto> excelDictDTOList = new ArrayList<>(records.size());
+/*        ArrayList<ExcelWorkbenchDto> excelDictDTOList = new ArrayList<>(records.size());
         records.forEach(c -> {
             ExcelWorkbenchDto excelTransactionRecordDTO = new ExcelWorkbenchDto();
             BeanUtils.copyProperties(c, excelTransactionRecordDTO);
             excelDictDTOList.add(excelTransactionRecordDTO);
-        });
-        return excelDictDTOList;
+        });*/
+        return records;
     }
+
+    @Override
+    public void exportExcel(HttpServletResponse response, Map<String, Object> params) {
+
+        long beforeTime = System.currentTimeMillis();
+
+         QueryWrapper<ExcelWorkbenchDto> queryWrapper = new QueryWrapper<>();
+
+        try {
+            new ExportExcelListener<ExcelWorkbenchDto>(crmWorkbenchDao).
+                    exportExcel(response, "城市列表", ExcelWorkbenchDto.class,
+                            queryWrapper,crmWorkbenchDao,params);
+        } catch (IOException e) {
+
+            e.printStackTrace();
+        }
+        long afterTime = System.currentTimeMillis();
+        log.error("耗时:{}", afterTime - beforeTime);
+
+
+    }
+
     @Override
     public List<ExcelSummaryStatisticsDto> exportSummaryStatisticsExcel(SysUserEntity user, Map<String, Object> params) {
         //导出所有，使用不分页的方法
@@ -194,11 +241,38 @@ public class CrmWorkbenchServiceImpl extends ServiceImpl<CrmWorkbenchDao, CrmWor
         baseMapper.updateById(crmWorkbench);
     }
 
+    @Transactional
+      public void doSomething(CrmWorkbenchEntity crmWorkbench, SysUserEntity user)  {
+
+        ((CrmWorkbenchService) AopContext.currentProxy()).insert();
+        //insert();
+        try {
+            Thread.sleep(100);
+            System.out.println("执行结束");
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+
+        }
+        throw  new RRException("ccc",3003);
+       // saveWorkbenchEntity(crmWorkbench,user);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void insert(){
+        CrmProjectEntity crmProjectEntity = new CrmProjectEntity();
+        crmProjectEntity.setProjectName("测试");
+        crmProjectEntity.setAchievements(133D);
+        crmProjectEntity.setCategoryId(4L);
+        crmProjectEntity.setSortIndex(2);
+        crmProjectService.save(crmProjectEntity);
+    }
 
 
     @Override
     public void saveWorkbenchEntity(CrmWorkbenchEntity crmWorkbench, SysUserEntity user) {
-       // Long projectId = crmWorkbench.getProjectId();
+
+
+
         String projectName = crmWorkbench.getProjectName();
         CrmProjectEntity crmProjectEntity = crmProjectService.getCrmProjectEntityByProjectName(projectName);
         CrmCategoryEntity crmCategoryEntity = crmProjectService.getCrmCategoryEntityByProjectName(projectName);

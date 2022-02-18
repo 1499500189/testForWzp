@@ -7,7 +7,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class CApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(CApplication.class, args);
+        try{
+            SpringApplication.run(CApplication.class, args);
+        }catch (Exception e){
+            e.printStackTrace();
+            e.getMessage();
+        }
     }
 
 }

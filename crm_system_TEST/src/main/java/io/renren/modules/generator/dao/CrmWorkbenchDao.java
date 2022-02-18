@@ -24,6 +24,7 @@ public interface CrmWorkbenchDao extends BaseMapper<CrmWorkbenchEntity> {
     IPage<CrmWorkbenchEntity> selectWorkbenchList(Page<?> page,@Param("params") Map<String, Object> params);
 
     List<CrmWorkbenchEntity> selectColumn(@Param("params")Map<String, Object> params);
+    Long selectColumnCount(@Param("params")Map<String, Object> params);
 
     IPage<ChartVo> getSummaryList(Page<?> page,@Param("params")Map<String, Object> params);
 
