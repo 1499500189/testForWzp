@@ -1,12 +1,16 @@
 package io.renren.modules.generator.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import io.renren.common.utils.PageUtils;
 import io.renren.modules.generator.entity.CrmWorkbenchEntity;
 import io.renren.modules.generator.entity.dto.ExcelSummaryStatisticsDto;
+import io.renren.modules.generator.entity.dto.ExcelWorkbenchDto;
+import io.renren.modules.generator.entity.dto.SummaryStatisticsExcelDto;
 import io.renren.modules.generator.entity.vo.ChartVo;
 import io.renren.modules.sys.entity.SysUserEntity;
+import io.swagger.models.auth.In;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.Collection;
@@ -26,7 +30,7 @@ public interface CrmWorkbenchService extends IService<CrmWorkbenchEntity> {
 
     IPage<CrmWorkbenchEntity> selectWorkbenchList(Map<String, Object> params,SysUserEntity currentUser);
 
-    Collection<?> exportExcel(SysUserEntity user, Map<String, Object> params);
+    Collection<?> exportExcel(SysUserEntity user, Map<String, Object> params,Integer integer);
     void exportExcel(HttpServletResponse httpServletResponse, Map<String, Object> params);
     CrmWorkbenchEntity getWorkbench(Long id);
 
@@ -44,5 +48,10 @@ public interface CrmWorkbenchService extends IService<CrmWorkbenchEntity> {
 
     void insert();
 
+    void exportExcelPeople(HttpServletResponse response, Map<String, Object> params);
+
+    List<ExcelWorkbenchDto> getSummaryList(Page<ChartVo> chartVoPage, Map<String, Object> params);
+
+    List<ExcelWorkbenchDto> selectWorkbenchListPageLimit(Integer i, Integer i1);
 }
 

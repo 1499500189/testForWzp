@@ -80,4 +80,100 @@ public class ExcelWorkbenchDto {
     @ExcelProperty("工号")
     private String jobNumber;
 
+    public Date getProcessingDate() {
+        return processingDate;
+    }
+
+    public void setProcessingDate(Date processingDate) {
+        this.processingDate = processingDate;
+    }
+
+    public String getTelephone() {
+        return telephone;
+    }
+
+    public void setTelephone(String telephone) {
+        this.telephone = telephone;
+    }
+
+    public String getProjectName() {
+        return projectName;
+    }
+
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
+    }
+
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
+    }
+
+    public Double getReducedAmount() {
+        return reducedAmount;
+    }
+
+    public void setReducedAmount(Double reducedAmount) {
+        this.reducedAmount = reducedAmount;
+    }
+
+    public Double getPackageAmount() {
+        return packageAmount;
+    }
+
+    public void setPackageAmount(Double packageAmount) {
+        this.packageAmount = packageAmount;
+    }
+
+    public Double getDownAmount() {
+        return downAmount;
+    }
+
+    public void setDownAmount(Double downAmount) {
+        this.downAmount = downAmount;
+    }
+
+    public Double getTotalPoints() {
+        return totalPoints;
+    }
+
+    public void setTotalPoints(Double totalPoints) {
+        this.totalPoints = totalPoints;
+    }
+
+    public Double getNumberAchievements() {
+        return numberAchievements;
+    }
+
+    public void setNumberAchievements(Double numberAchievements) {
+        this.numberAchievements = numberAchievements;
+    }
+
+    public String getIsTrue() {
+        return isTrue;
+    }
+
+    public void setIsTrue(String isTrue) {
+        this.isTrue = isTrue;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getJobNumber() {
+        return jobNumber;
+    }
+
+    public void setJobNumber(String jobNumber) {
+        this.jobNumber = jobNumber;
+    }
+
 }

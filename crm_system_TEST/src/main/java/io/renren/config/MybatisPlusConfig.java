@@ -30,7 +30,7 @@ public class MybatisPlusConfig {
     @Bean
     public PaginationInterceptor paginationInterceptor(){
         PaginationInterceptor paginationInterceptor = new PaginationInterceptor();
-        paginationInterceptor.setLimit(10*1000);
+        paginationInterceptor.setLimit(100000);
         return paginationInterceptor;
     }
 

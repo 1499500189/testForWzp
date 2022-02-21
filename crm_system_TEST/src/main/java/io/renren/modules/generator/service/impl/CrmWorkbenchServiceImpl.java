@@ -3,20 +3,18 @@ package io.renren.modules.generator.service.impl;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.renren.common.exception.RRException;
 import io.renren.common.utils.Constant;
-import io.renren.modules.app.service.UserService;
 import io.renren.modules.employee.constant.ConstantRoles;
 import io.renren.modules.employee.entity.EmployeeInfoEntity;
 import io.renren.modules.employee.service.EmployeeInfoService;
-import io.renren.modules.generator.controller.ExportExcelListener;
+import io.renren.modules.generator.util.ExportExcelListener;
 import io.renren.modules.generator.entity.dto.ExcelSummaryStatisticsDto;
 import io.renren.modules.generator.entity.dto.ExcelWorkbenchDto;
 import io.renren.modules.generator.entity.CrmCategoryEntity;
 import io.renren.modules.generator.entity.CrmProjectEntity;
-import io.renren.modules.generator.entity.dto.SummaryStatisticsExcelDto;
 import io.renren.modules.generator.entity.vo.ChartVo;
 import io.renren.modules.generator.service.CrmCategoryService;
 import io.renren.modules.generator.service.CrmProjectService;
-import io.renren.modules.sys.entity.SysRoleEntity;
+import io.renren.modules.milliondataexport.exportexcel.RunThread;
 import io.renren.modules.sys.entity.SysUserEntity;
 import io.renren.modules.sys.service.SysRoleService;
 import io.renren.modules.sys.service.SysUserRoleService;
@@ -27,14 +25,10 @@ import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -66,7 +60,7 @@ public class CrmWorkbenchServiceImpl extends ServiceImpl<CrmWorkbenchDao, CrmWor
     @Autowired
     private SysRoleService sysRoleService;
     @Autowired
-    private  CrmWorkbenchDao crmWorkbenchDao;
+    private CrmWorkbenchDao crmWorkbenchDao;
     protected Logger log = LoggerFactory.getLogger(getClass());
 
 
@@ -95,7 +89,7 @@ public class CrmWorkbenchServiceImpl extends ServiceImpl<CrmWorkbenchDao, CrmWor
         long page = Long.parseLong((String) params.get("page"));
         long limit = Long.parseLong((String) params.get("limit"));
         Page<CrmWorkbenchEntity> iPage = new Page<>(page, limit);
-        IPage<CrmWorkbenchEntity> workbenchList = baseMapper.selectWorkbenchList(iPage, params);
+/*        IPage<CrmWorkbenchEntity> workbenchList = baseMapper.selectWorkbenchList(iPage, params);
         List<CrmWorkbenchEntity> records = workbenchList.getRecords();
         for (CrmWorkbenchEntity record : records) {
             String telephone = record.getTelephone();
@@ -104,12 +98,10 @@ public class CrmWorkbenchServiceImpl extends ServiceImpl<CrmWorkbenchDao, CrmWor
             }
 
 
-        }
+        }*/
 
-        return workbenchList;
+        return null;
     }
-
-
 
     @Override
     public CrmWorkbenchEntity getWorkbench(Long id) {
@@ -153,66 +145,125 @@ public class CrmWorkbenchServiceImpl extends ServiceImpl<CrmWorkbenchDao, CrmWor
         //分页参数
         long curPage = 1;
         long limit = 10;
-        if ((String)params.get(Constant.PAGE) != null) {
+        if ((String) params.get(Constant.PAGE) != null) {
             curPage = Long.parseLong((String) params.get(Constant.PAGE));
         }
         if (params.get(Constant.LIMIT) != null) {
             limit = Long.parseLong((String) params.get(Constant.LIMIT));
         }
-        Page<CrmProjectEntity> iPage = new Page<>(curPage,limit);
-        IPage<ChartVo> c = baseMapper.getSummaryList(iPage,params);
+        Page<CrmProjectEntity> iPage = new Page<>(curPage, limit);
+        IPage<ChartVo> c = baseMapper.getSummaryList(iPage, params);
 
         return c;
     }
     @Override
-    public List<CrmWorkbenchEntity> exportExcel(SysUserEntity user, Map<String, Object> params) {
+    public List<ExcelWorkbenchDto> getSummaryList(Page<ChartVo> chartVoPage, Map<String, Object> params) {
 
+        IPage<ExcelWorkbenchDto> c = baseMapper.selectWorkbenchList(chartVoPage, params);
+        List<ExcelWorkbenchDto> records = c.getRecords();
+     //   ArrayList<ExcelWorkbenchDto> excelWorkbenchDtos = new ArrayList<>();
 
-        //导出所有，使用不分页的方法
-        List<CrmWorkbenchEntity> records = baseMapper.selectColumn(params);
-
-
-  /*      //使用分页方法
-   for (int i=0 ;i<100 ;i++){
-    Page<CrmProjectEntity> iPage = new Page<>(i+1,10000);
-    IPage<CrmWorkbenchEntity> workbenchList = baseMapper.selectWorkbenchList(iPage, params);
-    workbenchList.getRecords();
-   }*/
-        //创建ExcelDictDTO列表，将Dict列表转换成ExcelDictDTO列表
-/*        ArrayList<ExcelWorkbenchDto> excelDictDTOList = new ArrayList<>(records.size());
-        records.forEach(c -> {
-            ExcelWorkbenchDto excelTransactionRecordDTO = new ExcelWorkbenchDto();
-            BeanUtils.copyProperties(c, excelTransactionRecordDTO);
-            excelDictDTOList.add(excelTransactionRecordDTO);
+       /* records.forEach(e -> {
+            ExcelWorkbenchDto excelWorkbenchDto = new ExcelWorkbenchDto();
+            BeanUtils.copyProperties(e, excelWorkbenchDto);
+            excelWorkbenchDtos.add(excelWorkbenchDto);
         });*/
         return records;
     }
 
     @Override
-    public void exportExcel(HttpServletResponse response, Map<String, Object> params) {
+    public List<ExcelWorkbenchDto> selectWorkbenchListPageLimit(Integer i, Integer i1) {
+        List<ExcelWorkbenchDto> excelWorkbenchDtos = baseMapper.selectWorkbenchListPageLimit(i, i1);
+        return excelWorkbenchDtos;
+    }
 
+    @Override
+    public List<ChartVo> exportExcel(SysUserEntity user, Map<String, Object> params,Integer integer) {
+
+
+
+        //导出所有，使用不分页的方法
+        Page<CrmWorkbenchEntity> objectPage = new Page<>(integer, 100000);
+        IPage<ChartVo> summaryList = baseMapper.getSummaryList(objectPage, params);
+        //创建ExcelDictDTO列表，将Dict列表转换成ExcelDictDTO列表
+        ArrayList<ExcelWorkbenchDto> excelDictDTOList = new ArrayList<>(summaryList.getRecords().size());
+   /*     records.forEach(c -> {
+            ExcelWorkbenchDto excelTransactionRecordDTO = new ExcelWorkbenchDto();
+            BeanUtils.copyProperties(c, excelTransactionRecordDTO);
+            excelDictDTOList.add(excelTransactionRecordDTO);
+        });*/
+        return summaryList.getRecords();
+
+        //创建ExcelDictDTO列表，将Dict列表转换成ExcelDictDTO列表
+   //     return records;
+    }
+    //普通版本的
+    public void exportExcelPeople(HttpServletResponse response, Map<String, Object> params) {
+
+        //第几个线程
         long beforeTime = System.currentTimeMillis();
-
-         QueryWrapper<ExcelWorkbenchDto> queryWrapper = new QueryWrapper<>();
+        QueryWrapper<ExcelWorkbenchDto> queryWrapper = new QueryWrapper<>();
 
         try {
-            new ExportExcelListener<ExcelWorkbenchDto>(crmWorkbenchDao).
-                    exportExcel(response, "城市列表", ExcelWorkbenchDto.class,
-                            queryWrapper,crmWorkbenchDao,params);
+            new ExportExcelListener<ExcelWorkbenchDto>(crmWorkbenchDao).exportExcel(response, "表", ExcelWorkbenchDto.class,
+                    queryWrapper, crmWorkbenchDao, params);
         } catch (IOException e) {
 
             e.printStackTrace();
         }
         long afterTime = System.currentTimeMillis();
         log.error("耗时:{}", afterTime - beforeTime);
+    }
 
 
+    @Override
+    //多线程的
+    public void exportExcel(HttpServletResponse response, Map<String, Object> params) {
+        //第几个线程
+        long beforeTime = System.currentTimeMillis();
+        //使用for循环
+        Long aLong = crmWorkbenchDao.selectColumnCount(params);
+        int pageNumber = (int) Math.ceil((double) aLong / (double) 100000);    //分页条数看情况
+
+        for (int i = 1; i <=pageNumber; i++) {
+
+
+            //GenaratorThread genaratorThread = new GenaratorThread(response, params, crmWorkbenchDao, i);
+            try {
+              //  FutureTask futureTask = new FutureTask<Callable>(genaratorThread);
+                RunThread runThread = new RunThread(response, params, crmWorkbenchDao, i, this);
+                new Thread(runThread).start();
+                System.out.println("执行完成call方法");
+            } catch (Exception e) {
+               // e.printStackTrace();
+                e.getMessage();
+            }
+
+        }
+        long afterTime = System.currentTimeMillis();
+        log.error("耗时:{}", afterTime - beforeTime);
+
+    }
+    public   Integer exportLimit(HttpServletResponse response, Map<String, Object> params,Integer i){
+        long beforeTime = System.currentTimeMillis();
+        QueryWrapper<ExcelWorkbenchDto> queryWrapper = new QueryWrapper<>();
+
+        try {
+            new ExportExcelListener<ExcelWorkbenchDto>(crmWorkbenchDao).exportExcel(response, i+"", ExcelWorkbenchDto.class,
+                    queryWrapper, crmWorkbenchDao, params, i);
+        } catch (IOException e) {
+
+            e.printStackTrace();
+        }
+        long afterTime = System.currentTimeMillis();
+        log.error("耗时:{}", afterTime - beforeTime);
+        return  i;
     }
 
     @Override
     public List<ExcelSummaryStatisticsDto> exportSummaryStatisticsExcel(SysUserEntity user, Map<String, Object> params) {
         //导出所有，使用不分页的方法
-        List<ChartVo> records  = baseMapper.getSummaryListNoPage(params);
+        List<ChartVo> records = baseMapper.getSummaryListNoPage(params);
         //创建ExcelDictDTO列表，将Dict列表转换成ExcelDictDTO列表
         List<ExcelSummaryStatisticsDto> excelSummaryStatisticsDtos = new ArrayList<>(records.size());
         records.forEach(c -> {
@@ -225,12 +276,12 @@ public class CrmWorkbenchServiceImpl extends ServiceImpl<CrmWorkbenchDao, CrmWor
 
     @Override
     public void updateWorkbenchEntity(CrmWorkbenchEntity crmWorkbench, SysUserEntity currentUser) {
-       // log.error(crmWorkbench.toString());
+        // log.error(crmWorkbench.toString());
         String roleName = sysUserService.getCurrentUserRoleName(currentUser);
         if (roleName.equals(ConstantRoles.executiveDirector) || roleName.equals(ConstantRoles.staff)) {
             throw new RRException("不能修改", 399);
         }
-      //  Long projectId = crmWorkbench.getProjectId();
+        //  Long projectId = crmWorkbench.getProjectId();
         //CrmCategoryEntity crmCategoryEntity = crmProjectService.getCrmCategoryEntity(projectId);
         String projectName = crmWorkbench.getProjectName();
         CrmProjectEntity crmProjectEntity = crmProjectService.getCrmProjectEntityByProjectName(projectName);
@@ -242,7 +293,7 @@ public class CrmWorkbenchServiceImpl extends ServiceImpl<CrmWorkbenchDao, CrmWor
     }
 
     @Transactional
-      public void doSomething(CrmWorkbenchEntity crmWorkbench, SysUserEntity user)  {
+    public void doSomething(CrmWorkbenchEntity crmWorkbench, SysUserEntity user) {
 
         ((CrmWorkbenchService) AopContext.currentProxy()).insert();
         //insert();
@@ -253,12 +304,12 @@ public class CrmWorkbenchServiceImpl extends ServiceImpl<CrmWorkbenchDao, CrmWor
             e.printStackTrace();
 
         }
-        throw  new RRException("ccc",3003);
-       // saveWorkbenchEntity(crmWorkbench,user);
+        throw new RRException("ccc", 3003);
+        // saveWorkbenchEntity(crmWorkbench,user);
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void insert(){
+    public void insert() {
         CrmProjectEntity crmProjectEntity = new CrmProjectEntity();
         crmProjectEntity.setProjectName("测试");
         crmProjectEntity.setAchievements(133D);
@@ -272,22 +323,20 @@ public class CrmWorkbenchServiceImpl extends ServiceImpl<CrmWorkbenchDao, CrmWor
     public void saveWorkbenchEntity(CrmWorkbenchEntity crmWorkbench, SysUserEntity user) {
 
 
-
         String projectName = crmWorkbench.getProjectName();
         CrmProjectEntity crmProjectEntity = crmProjectService.getCrmProjectEntityByProjectName(projectName);
         CrmCategoryEntity crmCategoryEntity = crmProjectService.getCrmCategoryEntityByProjectName(projectName);
         crmWorkbench.setCategoryId(crmCategoryEntity.getCategoryId());
         crmWorkbench.setProjectId(crmProjectEntity.getProjectId());
 
-        try{
+        try {
             baseMapper.insert(crmWorkbench);
-        }catch (DataIntegrityViolationException e) {
+        } catch (DataIntegrityViolationException e) {
             throw new RRException("信息字段长度过长", 500);
         }
 
 
     }
-
 
 
 }

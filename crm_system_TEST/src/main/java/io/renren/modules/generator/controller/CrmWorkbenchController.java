@@ -1,23 +1,31 @@
 package io.renren.modules.generator.controller;
 
-import java.io.IOException;
+import java.io.*;
 import java.net.URLEncoder;
 import java.util.*;
 
 import cn.hutool.core.date.DateTime;
 import com.alibaba.excel.EasyExcel;
+import com.alibaba.excel.ExcelWriter;
+import com.alibaba.excel.write.metadata.WriteSheet;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.renren.common.annotation.SysLog;
 import io.renren.common.exception.RRException;
+import io.renren.modules.generator.controller.nowci.WriteExcel;
 import io.renren.modules.generator.entity.CrmCategoryEntity;
 import io.renren.modules.generator.entity.CrmProjectEntity;
 import io.renren.modules.generator.entity.dto.ExcelWorkbenchDto;
 import io.renren.modules.generator.entity.vo.WorkbenchProjectVo;
 import io.renren.modules.generator.service.CrmProjectService;
+import io.renren.modules.generator.util.ExcelUtil;
 import io.renren.modules.sys.controller.AbstractController;
 import io.renren.modules.sys.entity.SysUserEntity;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +36,7 @@ import io.renren.modules.generator.service.CrmWorkbenchService;
 import io.renren.common.utils.PageUtils;
 import io.renren.common.utils.R;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 
@@ -157,25 +166,80 @@ public class CrmWorkbenchController extends AbstractController {
         return  R.ok().put("isIntegral",isIntegral);
     }
 
-    //导出文件
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    //导出文件非web
     @RequestMapping("/exportExcel")
     @RequiresPermissions("generator:crmworkbench:exportexcel")
-    public void exportExcel(@RequestParam Map<String, Object> params, HttpServletResponse response) throws Exception {
-/*
-        //导出excel
+    public void exportExcel(@RequestParam Map<String, Object> params, HttpServletResponse response) {
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        response.setCharacterEncoding("utf-8");
+        // 这里URLEncoder.encode可以防止中文乱码 当然和easyexcel没有关系
+        String fileName = null;
         try {
-            response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-            response.setCharacterEncoding("utf-8");
-            // 这里URLEncoder.encode可以防止中文乱码 当然和easyexcel没有关系
-            String fileName = URLEncoder.encode("excel", "UTF-8").replaceAll("\\+", "%20");
-            response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx");
-            EasyExcel.write(response.getOutputStream(), ExcelWorkbenchDto.class).sheet("工作台").doWrite(crmWorkbenchService.exportExcel(getUser(), params));
-            //  MultipartFile file =     crmTransactionRecordService.exportExcel(getUser(),params);
-        } catch (IOException e) {
-            throw new RRException("数据导出失败", 403);
-        }*/
-        crmWorkbenchService.exportExcel(response,params);
+            fileName = URLEncoder.encode("excel", "UTF-8").replaceAll("\\+", "%20");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx");
+        long beforeTime = System.currentTimeMillis();
 
+
+       /* crmWorkbenchService.exportExcel(response,params);*/
+
+        WriteExcel.writeExcel(crmWorkbenchService,null,1,"ycy",params);
+
+        long afterTime = System.currentTimeMillis();
+        logger.error("耗时:{}", afterTime - beforeTime);
     }
+    //导出文件web
+    @RequestMapping("/exportExcelWeb")
+    @RequiresPermissions("generator:crmworkbench:exportexcel")
+    public void exportExcelWeb(@RequestParam Map<String, Object> params, HttpServletResponse response) {
+
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        response.setCharacterEncoding("utf-8");
+        // 这里URLEncoder.encode可以防止中文乱码 当然和easyexcel没有关系
+        String fileName = "two";
+        response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx");
+        long beforeTime = System.currentTimeMillis();
+
+        WriteExcel.writeExcelWeb(crmWorkbenchService,null,1,"ycy",params,response);
+
+        long afterTime = System.currentTimeMillis();
+        logger.error("耗时:{}", afterTime - beforeTime);
+    }
+
+
+
+
+
+
+    public static final String[] TITLE = new String[]{"第1列", "第2列", "第3列", "第4列", "第5列"};
+    public static final String SHEET_NAME = "page1";
+
+
 
 }
