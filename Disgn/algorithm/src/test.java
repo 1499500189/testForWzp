@@ -13,9 +13,14 @@ import java.util.Map;
  */
 public class test {
     public static void main(String[] args) throws IOException {
+<<<<<<< Updated upstream
         String s ="dasdasdasfweqafwefef";
         System.out.println(s.length());
 
+=======
+        String s = exR2(3);
+        System.out.println(s);
+>>>>>>> Stashed changes
     }
 
     private static String getString() throws IOException {
@@ -24,6 +29,14 @@ public class test {
         br = new BufferedReader(isr);
         String s = br.readLine();
         return s;
+    }
+    public static String exR2(int n){
+
+        String s =exR2(n-3)+n+exR2(n-2)+n;
+        if (n<=0) {
+            return "";
+        }
+        return  s ;
     }
 }
 class IdCode{

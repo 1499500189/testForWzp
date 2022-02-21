@@ -1,16 +1,19 @@
 package proxy.cglib;
 
 
+/*
 import org.springframework.cglib.proxy.Enhancer;
 import org.springframework.cglib.proxy.MethodInterceptor;
 import org.springframework.cglib.proxy.MethodProxy;
 
 import java.lang.reflect.Method;
 
+*/
 /**
  * @author
  * @date 2021 年 12 月 15 日
- */
+ *//*
+
 public class ProxyFactory  implements MethodInterceptor {
     //维护一个目标对象
     private  Object target;
@@ -35,3 +38,4 @@ public class ProxyFactory  implements MethodInterceptor {
         return invoke;
     }
 }
+*/

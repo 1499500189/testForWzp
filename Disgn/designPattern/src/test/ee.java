@@ -7,8 +7,5 @@ package test;
 public class ee {
     public static void main(String[] args) {
 
-        String s ="dsd***";
-        boolean i = s.contains("*");
-        System.out.println(i);
     }
 }
