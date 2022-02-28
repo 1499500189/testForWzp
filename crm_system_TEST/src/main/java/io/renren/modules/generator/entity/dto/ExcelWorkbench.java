@@ -1,8 +1,6 @@
 package io.renren.modules.generator.entity.dto;
 
-import cn.afterturn.easypoi.excel.annotation.Excel;
 import cn.hutool.core.annotation.Alias;
-import com.alibaba.excel.annotation.ExcelProperty;
 import com.alibaba.excel.annotation.format.DateTimeFormat;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
@@ -17,15 +15,9 @@ import java.util.Date;
  */
 @Data
 @ToString
-public class ExcelWorkbenchDto implements Serializable {
-    /**
-     * 日期
-     */
-    //ali excel 的注解 ，解决格式问题，不带时分秒
-    @DateTimeFormat("yyyy-MM-dd")
-    @JsonFormat(pattern = "yyyy-MM-dd",timezone = "GMT+8")
-    @Alias("日期")
-    private Date processingDate;
+public class ExcelWorkbench implements Serializable {
+
+    private String processingDate;
     /**
      * 手机号
      */
@@ -84,14 +76,6 @@ public class ExcelWorkbenchDto implements Serializable {
     //工号
     @Alias("工号")
     private String jobNumber;
-
-    public Date getProcessingDate() {
-        return processingDate;
-    }
-
-    public void setProcessingDate(Date processingDate) {
-        this.processingDate = processingDate;
-    }
 
     public String getTelephone() {
         return telephone;

@@ -42,7 +42,7 @@ public interface EmployeeInfoService extends IService<EmployeeInfoEntity> {
     void updateEmployeeInfo(String currentRoleName, SysUserEntity currentUser, EmployeeInfoEntity employeeInfo);
     @Deprecated
     boolean isChangePassword(SysUserEntity currentUser);
-    @Deprecated
+
     EmployeeInfoEntity queryUserId(Long userId);
     @Deprecated
     List<TreeViewVo> listByParentId(Long i);

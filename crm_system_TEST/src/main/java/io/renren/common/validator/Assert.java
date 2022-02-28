@@ -9,6 +9,7 @@
 package io.renren.common.validator;
 
 import io.renren.common.exception.RRException;
+import io.renren.modules.springdatatest.CustomerRepository;
 import org.apache.commons.lang.StringUtils;
 
 /**
@@ -29,4 +30,6 @@ public abstract class Assert {
             throw new RRException(message);
         }
     }
+
+
 }

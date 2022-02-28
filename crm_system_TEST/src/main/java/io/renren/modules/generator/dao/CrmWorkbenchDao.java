@@ -33,5 +33,5 @@ public interface CrmWorkbenchDao extends BaseMapper<CrmWorkbenchEntity> {
 
     List<ChartVo> getSummaryListNoPage(@Param("params")Map<String, Object> params);
       //百万数据导出 的
-    List<ExcelWorkbenchDto> selectWorkbenchListPageLimit(@Param("current") Integer current, @Param("size") Integer size );
+    List<ExcelWorkbenchDto> selectWorkbenchListPageLimit(@Param("current") Integer current, @Param("size") Integer size ,@Param("iAll") Integer iAll,@Param("params")Map<String, Object> params);
 }

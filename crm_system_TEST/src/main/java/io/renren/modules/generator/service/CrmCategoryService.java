@@ -7,7 +7,7 @@ import io.renren.modules.generator.entity.CrmCategoryEntity;
 import java.util.Map;
 
 /**
- * 
+ *
  *
  * @author chenshun
  * @email sunlightcs@gmail.com

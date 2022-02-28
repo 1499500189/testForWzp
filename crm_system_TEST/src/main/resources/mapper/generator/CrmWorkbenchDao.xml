@@ -23,9 +23,6 @@
         cw.down_amount,cw.total_points,cw.number_achievements,cw.telephone,cw.is_true ,cw.job_number
         ,cw.remarks,cw.create_time
         from crm_workbench  as cw
-      <!--  left join crm_category as cc on cw.category_id=cc.category_id
-        left join crm_project as cp on cw.project_id=cp.project_id
-        left join sys_user as su on su.user_id=cw.user_id-->
         <where>
             <if test="params.startTime != null and params.startTime!=''">
                 and cw.processing_date &gt;=#{params.startTime}
@@ -171,8 +168,13 @@
         cw.down_amount,cw.total_points,cw.number_achievements,cw.telephone,cw.is_true ,cw.job_number
         ,cw.remarks,cw.create_time
         from crm_workbench  as cw
-
-        limit #{current},#{size}
+        <where>
+            cw.id>=(
+            select  id from crm_workbench
+            limit #{current},1
+            )
+        </where>
+        limit  0,#{size}
     </select>
 
 

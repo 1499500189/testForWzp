@@ -1,6 +1,7 @@
 package io.renren.modules.generator.service.impl;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.google.common.collect.Lists;
 import io.renren.common.exception.RRException;
 import io.renren.common.utils.Constant;
 import io.renren.modules.employee.constant.ConstantRoles;
@@ -29,6 +30,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.*;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -62,7 +64,11 @@ public class CrmWorkbenchServiceImpl extends ServiceImpl<CrmWorkbenchDao, CrmWor
     @Autowired
     private CrmWorkbenchDao crmWorkbenchDao;
     protected Logger log = LoggerFactory.getLogger(getClass());
+    private static final Integer sheetTotal = 65535;
+    private static final BlockingQueue BLOCKING_QUEUE = new ArrayBlockingQueue(8);
 
+    private static final ThreadPoolExecutor.CallerRunsPolicy POLICY = new ThreadPoolExecutor.CallerRunsPolicy();
+    private static final ThreadPoolExecutor EXECUTOR = new ThreadPoolExecutor(4, 8, 60, TimeUnit.SECONDS, BLOCKING_QUEUE, POLICY);
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -70,14 +76,10 @@ public class CrmWorkbenchServiceImpl extends ServiceImpl<CrmWorkbenchDao, CrmWor
                 new Query<CrmWorkbenchEntity>().getPage(params),
                 new QueryWrapper<CrmWorkbenchEntity>()
         );
-
         return new PageUtils(page);
     }
-
     @Override
     public IPage<CrmWorkbenchEntity> selectWorkbenchList(Map<String, Object> params, SysUserEntity currentUser) {
-
-
         String roleName = sysUserService.getCurrentUserRoleName(currentUser);
         if (!roleName.equals(ConstantRoles.OW)) {
             EmployeeInfoEntity employeeInfoEntity = employeeInfoService.queryUserId(currentUser.getUserId());
@@ -89,55 +91,12 @@ public class CrmWorkbenchServiceImpl extends ServiceImpl<CrmWorkbenchDao, CrmWor
         long page = Long.parseLong((String) params.get("page"));
         long limit = Long.parseLong((String) params.get("limit"));
         Page<CrmWorkbenchEntity> iPage = new Page<>(page, limit);
-/*        IPage<CrmWorkbenchEntity> workbenchList = baseMapper.selectWorkbenchList(iPage, params);
-        List<CrmWorkbenchEntity> records = workbenchList.getRecords();
-        for (CrmWorkbenchEntity record : records) {
-            String telephone = record.getTelephone();
-            if (telephone.length() >= 7) {
-                record.setTelephone(telephone.substring(0, 3) + "****" + telephone.substring(7));
-            }
-
-
-        }*/
-
         return null;
     }
 
     @Override
     public CrmWorkbenchEntity getWorkbench(Long id) {
-        CrmWorkbenchEntity crmWorkbenchEntity = baseMapper.selectById(id);
-        Long categoryId = crmWorkbenchEntity.getCategoryId();
-        QueryWrapper<CrmCategoryEntity> categoryWrapper = new QueryWrapper<>();
-        categoryWrapper.eq("category_id", categoryId);
-        CrmCategoryEntity categoryEntity = crmCategoryService.getOne(categoryWrapper);
-        if (null != categoryEntity) {
-            crmWorkbenchEntity.setCategoryName(categoryEntity.getCategoryName());
-        }
-
-
-        Long projectId = crmWorkbenchEntity.getProjectId();
-        QueryWrapper<CrmProjectEntity> projectWrapper = new QueryWrapper<>();
-        projectWrapper.eq("project_id", projectId);
-        CrmProjectEntity projectEntity = crmProjectService.getOne(projectWrapper);
-        if (null != projectEntity) {
-            crmWorkbenchEntity.setProjectName(projectEntity.getProjectName());
-        }
-
-        Long userId = crmWorkbenchEntity.getUserId();
-        QueryWrapper<SysUserEntity> userWrapper = new QueryWrapper<>();
-        userWrapper.eq("user_id", userId);
-        SysUserEntity userEntity = sysUserService.getOne(userWrapper);
-        if (null != userEntity) {
-            crmWorkbenchEntity.setUsername(userEntity.getUsername());
-        }
-
-        String telephone = crmWorkbenchEntity.getTelephone();
-        if (telephone.length() >= 7) {
-            crmWorkbenchEntity.setTelephone(telephone.substring(0, 3) + "****" + telephone.substring(7));
-        }
-
-
-        return crmWorkbenchEntity;
+return  null;
     }
 
     @Override
@@ -172,10 +131,14 @@ public class CrmWorkbenchServiceImpl extends ServiceImpl<CrmWorkbenchDao, CrmWor
     }
 
     @Override
-    public List<ExcelWorkbenchDto> selectWorkbenchListPageLimit(Integer i, Integer i1) {
-        List<ExcelWorkbenchDto> excelWorkbenchDtos = baseMapper.selectWorkbenchListPageLimit(i, i1);
+    public List<ExcelWorkbenchDto> selectWorkbenchListPageLimit(Integer i, Integer i1, Integer iAll, Map<String, Object> params) {
+        List<ExcelWorkbenchDto> excelWorkbenchDtos = baseMapper.selectWorkbenchListPageLimit(i, i1,iAll,params);
         return excelWorkbenchDtos;
     }
+
+
+
+
 
     @Override
     public List<ChartVo> exportExcel(SysUserEntity user, Map<String, Object> params,Integer integer) {
@@ -276,67 +239,71 @@ public class CrmWorkbenchServiceImpl extends ServiceImpl<CrmWorkbenchDao, CrmWor
 
     @Override
     public void updateWorkbenchEntity(CrmWorkbenchEntity crmWorkbench, SysUserEntity currentUser) {
-        // log.error(crmWorkbench.toString());
-        String roleName = sysUserService.getCurrentUserRoleName(currentUser);
-        if (roleName.equals(ConstantRoles.executiveDirector) || roleName.equals(ConstantRoles.staff)) {
-            throw new RRException("不能修改", 399);
-        }
-        //  Long projectId = crmWorkbench.getProjectId();
-        //CrmCategoryEntity crmCategoryEntity = crmProjectService.getCrmCategoryEntity(projectId);
-        String projectName = crmWorkbench.getProjectName();
-        CrmProjectEntity crmProjectEntity = crmProjectService.getCrmProjectEntityByProjectName(projectName);
-        CrmCategoryEntity crmCategoryEntity = crmProjectService.getCrmCategoryEntityByProjectName(projectName);
-        crmWorkbench.setCategoryId(crmCategoryEntity.getCategoryId());
-        crmWorkbench.setProjectId(crmProjectEntity.getProjectId());
-
-        baseMapper.updateById(crmWorkbench);
     }
 
     @Transactional
     public void doSomething(CrmWorkbenchEntity crmWorkbench, SysUserEntity user) {
-
-        ((CrmWorkbenchService) AopContext.currentProxy()).insert();
-        //insert();
-        try {
-            Thread.sleep(100);
-            System.out.println("执行结束");
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-
-        }
-        throw new RRException("ccc", 3003);
-        // saveWorkbenchEntity(crmWorkbench,user);
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void insert() {
-        CrmProjectEntity crmProjectEntity = new CrmProjectEntity();
-        crmProjectEntity.setProjectName("测试");
-        crmProjectEntity.setAchievements(133D);
-        crmProjectEntity.setCategoryId(4L);
-        crmProjectEntity.setSortIndex(2);
-        crmProjectService.save(crmProjectEntity);
     }
 
 
     @Override
     public void saveWorkbenchEntity(CrmWorkbenchEntity crmWorkbench, SysUserEntity user) {
-
-
-        String projectName = crmWorkbench.getProjectName();
-        CrmProjectEntity crmProjectEntity = crmProjectService.getCrmProjectEntityByProjectName(projectName);
-        CrmCategoryEntity crmCategoryEntity = crmProjectService.getCrmCategoryEntityByProjectName(projectName);
-        crmWorkbench.setCategoryId(crmCategoryEntity.getCategoryId());
-        crmWorkbench.setProjectId(crmProjectEntity.getProjectId());
-
-        try {
-            baseMapper.insert(crmWorkbench);
-        } catch (DataIntegrityViolationException e) {
-            throw new RRException("信息字段长度过长", 500);
-        }
-
-
     }
 
 
+
+    class PoiDataCallable implements Callable<List<ExcelWorkbenchDto>> {
+        private Integer pageNo; //dangqian页 从0开始
+        private String search;
+
+        public PoiDataCallable(Integer pageNo, String search) {
+            this.pageNo = pageNo;
+            this.search = search;
+        }
+
+        @Override
+        public List<ExcelWorkbenchDto> call() throws Exception {
+            log.info("----当前线程：{}", Thread.currentThread().getName());
+
+            long startTime = System.currentTimeMillis();
+            List<ExcelWorkbenchDto> exifInfoList = null;
+
+            //  exifInfoList = crmWorkbenchService.getSummaryList(chartVoPage,params);
+            exifInfoList  = selectWorkbenchListPageLimit(pageNo*100000, 100000,pageNo*100000*100000,new HashMap<>());
+            long endTime=System.currentTimeMillis();
+            long spendTime=endTime-startTime;
+            log.info(Thread.currentThread().getName()+"查询耗时："+spendTime);
+            //查询数据  ，
+            return exifInfoList;
+        }
+    }
+    /**
+     * 获取导出Excel需要的数据-easyExcel
+     * @param search
+     * @return
+     * @throws Exception
+     */
+    public List<List<ExcelWorkbenchDto>> getDataV2(final String search)throws Exception {
+        List<List<ExcelWorkbenchDto>> resList = Lists.newLinkedList();
+
+        Long total = getBaseMapper().selectColumnCount(new HashMap<>());
+        if (total > sheetTotal){
+            Long count = (total % sheetTotal == 0) ? total / sheetTotal : total / sheetTotal + 1;
+            List<PoiDataCallable> calls = Lists.newLinkedList();
+            for (int i = 0; i <= count; i++) {
+                calls.add(new PoiDataCallable(i,search));
+            }
+            List<Future<List<ExcelWorkbenchDto>>> list = EXECUTOR.invokeAll(calls);
+            for (Future<List<ExcelWorkbenchDto>> future:list) {
+                resList.add(future.get());
+            }
+        }else {
+            return  null;
+        }
+        return resList;
+    }
 }
