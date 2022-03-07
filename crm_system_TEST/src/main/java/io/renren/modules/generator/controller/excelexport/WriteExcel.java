@@ -129,6 +129,7 @@ public class WriteExcel {
         exector.setMaximumPoolSize(maximumPoolSize);
         List<ReadExifInfoThreadWebMultipleExcel> tasks = new ArrayList<ReadExifInfoThreadWebMultipleExcel>();
         List<Future<Boolean>> futures = null;
+        CountDownLatch countDownLatch = new CountDownLatch(11);
         try {
             excelWriter = EasyExcel.write(response.getOutputStream(), ExcelWorkbenchDto.class).build();
         } catch (IOException e) {
@@ -137,7 +138,7 @@ public class WriteExcel {
 
         try {
             for (int i = 0; i < corePoolSize; i++) {
-                ReadExifInfoThreadWebMultipleExcel readExifInfoThread = new ReadExifInfoThreadWebMultipleExcel(queryCondition, exportExcelservice, i, num, params, response, excelWriter);
+                ReadExifInfoThreadWebMultipleExcel readExifInfoThread = new ReadExifInfoThreadWebMultipleExcel(queryCondition, exportExcelservice, i, num, params, response, excelWriter,countDownLatch);
                 tasks.add(readExifInfoThread);
             }
             futures = exector.invokeAll(tasks);
@@ -146,7 +147,11 @@ public class WriteExcel {
         } catch (Exception e) {
             e.getStackTrace();
         }
-
+        try {
+            countDownLatch.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         exector.shutdown();
 
         excelWriter.finish();

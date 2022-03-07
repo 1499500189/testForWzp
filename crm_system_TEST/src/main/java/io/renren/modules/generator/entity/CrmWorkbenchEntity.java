@@ -19,7 +19,6 @@ import lombok.Data;
  * @email sunlightcs@gmail.com
  * @date 2022-01-21 15:00:52
  */
-@Data
 @TableName("crm_workbench")
 public class CrmWorkbenchEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -118,6 +117,151 @@ public class CrmWorkbenchEntity implements Serializable {
 	//备注
 	private String remarks;
 
+	public static long getSerialVersionUID() {
+		return serialVersionUID;
+	}
 
+	public Long getId() {
+		return id;
+	}
 
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public Date getProcessingDate() {
+		return processingDate;
+	}
+
+	public void setProcessingDate(Date processingDate) {
+		this.processingDate = processingDate;
+	}
+
+	public Date getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
+
+	public Long getProjectId() {
+		return projectId;
+	}
+
+	public void setProjectId(Long projectId) {
+		this.projectId = projectId;
+	}
+
+	public String getProjectName() {
+		return projectName;
+	}
+
+	public void setProjectName(String projectName) {
+		this.projectName = projectName;
+	}
+
+	public Long getCategoryId() {
+		return categoryId;
+	}
+
+	public void setCategoryId(Long categoryId) {
+		this.categoryId = categoryId;
+	}
+
+	public String getCategoryName() {
+		return categoryName;
+	}
+
+	public void setCategoryName(String categoryName) {
+		this.categoryName = categoryName;
+	}
+
+	public Double getReducedAmount() {
+		return reducedAmount;
+	}
+
+	public void setReducedAmount(Double reducedAmount) {
+		this.reducedAmount = reducedAmount;
+	}
+
+	public Double getPackageAmount() {
+		return packageAmount;
+	}
+
+	public void setPackageAmount(Double packageAmount) {
+		this.packageAmount = packageAmount;
+	}
+
+	public Double getDownAmount() {
+		return downAmount;
+	}
+
+	public void setDownAmount(Double downAmount) {
+		this.downAmount = downAmount;
+	}
+
+	public Double getTotalPoints() {
+		return totalPoints;
+	}
+
+	public void setTotalPoints(Double totalPoints) {
+		this.totalPoints = totalPoints;
+	}
+
+	public Double getNumberAchievements() {
+		return numberAchievements;
+	}
+
+	public void setNumberAchievements(Double numberAchievements) {
+		this.numberAchievements = numberAchievements;
+	}
+
+	public Long getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Long userId) {
+		this.userId = userId;
+	}
+
+	public String getTelephone() {
+		return telephone;
+	}
+
+	public void setTelephone(String telephone) {
+		this.telephone = telephone;
+	}
+
+	public String getIsTrue() {
+		return isTrue;
+	}
+
+	public void setIsTrue(String isTrue) {
+		this.isTrue = isTrue;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public String getJobNumber() {
+		return jobNumber;
+	}
+
+	public void setJobNumber(String jobNumber) {
+		this.jobNumber = jobNumber;
+	}
+
+	public String getRemarks() {
+		return remarks;
+	}
+
+	public void setRemarks(String remarks) {
+		this.remarks = remarks;
+	}
 }

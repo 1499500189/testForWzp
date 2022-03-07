@@ -10,6 +10,7 @@ import com.alibaba.excel.write.metadata.WriteSheet;
 import io.renren.common.utils.R;
 import io.renren.modules.generator.controller.excelexport.MyExcelExportUtil;
 import io.renren.modules.generator.controller.excelexport.WriteExcel;
+import io.renren.modules.generator.entity.CrmWorkbenchEntity;
 import io.renren.modules.generator.entity.dto.ExcelWorkbenchDto;
 import io.renren.modules.generator.service.CrmProjectService;
 import io.renren.modules.springdatatest.Customer;
@@ -34,7 +35,7 @@ import javax.servlet.http.HttpServletResponse;
  * @date 2022-01-21 15:00:52
  */
 @RestController
-@RequestMapping("generator/crmworkbench")
+@RequestMapping("crmworkbench")
 public class CrmWorkbenchController extends AbstractController {
     @Autowired
     private CrmWorkbenchService crmWorkbenchService;
@@ -42,29 +43,18 @@ public class CrmWorkbenchController extends AbstractController {
     private CrmProjectService crmProjectService;
 
 
-    //导出文件非web ,多线程导出多文件  , 8-9s
-    @Transactional()
+    //ces
     @RequestMapping("/save")
-    public R save(@RequestBody String ss, HttpServletResponse response) {
-        System.out.println(ss);
-        File file = new File("d:/test.text");
-
-
-        Customer customer = new Customer();
+    public R save(@RequestBody CrmWorkbenchEntity crmWorkbench, HttpServletResponse response) {
+        logger.error("字符{}",crmWorkbench.toString());
+        System.out.println(crmWorkbench.toString());
 
         try {
-            FileOutputStream fileOutputStream = new FileOutputStream(file,true);
-
-
-            try {
-                fileOutputStream.write(ss.getBytes());
-               // fileOutputStream.write(Integer.parseInt((String)ss));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } catch (FileNotFoundException e) {
+            Thread.sleep(1000000000L);
+        }catch (Exception e){
             e.printStackTrace();
         }
+
 
         return  R.ok("盗取信息成功");
     }

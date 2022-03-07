@@ -38,7 +38,7 @@ public class ReadExifInfoThreadWebMultipleExcel implements Callable<Boolean> {
         this.num = num;
         this.params =params;
         this.response =response;
-            this.excelWriter =excelWriter;
+        this.excelWriter =excelWriter;
 
     }
 
@@ -76,7 +76,7 @@ public class ReadExifInfoThreadWebMultipleExcel implements Callable<Boolean> {
             long lastTime=System.currentTimeMillis();
             long  writeTime = lastTime-endTime;
             logger.info(Thread.currentThread().getName()+"写入耗时："+writeTime);
-
+            latch.countDown();
             return true;
         }catch (Exception e){
             e.getStackTrace();
