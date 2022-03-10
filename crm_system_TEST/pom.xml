@@ -269,8 +269,27 @@
 			<artifactId>easypoi-annotation</artifactId>
 			<version>4.3.0</version>
 		</dependency>
-
-	</dependencies>
+        <dependency>
+            <groupId>com.alipay.sdk</groupId>
+            <artifactId>alipay-sdk-java</artifactId>
+            <version>4.13.58.ALL</version>
+        </dependency>
+		<dependency>
+			<groupId>com.googlecode.libphonenumber</groupId>
+			<artifactId>libphonenumber</artifactId>
+			<version>8.7.1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.googlecode.libphonenumber</groupId>
+			<artifactId>geocoder</artifactId>
+			<version>2.76</version>
+		</dependency>
+		<dependency>
+			<groupId>com.googlecode.libphonenumber</groupId>
+			<artifactId>carrier</artifactId>
+			<version>1.66</version>
+		</dependency>
+    </dependencies>
 
 	<build>
 		<finalName>${project.artifactId}</finalName>
