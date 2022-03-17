@@ -176,6 +176,28 @@
         </where>
         limit  0,#{size}
     </select>
+    <select id="getGraphicStatisticsList" resultType="io.renren.modules.generator.dao.po.GraphicalStatisticsVo">
+        select cp.project_id ,
+        cp.project_name,
+        su.username ,
+        sum(CASE WHEN ISNULL(cwb.project_id)=1  THEN 0 ELSE 1 END) AS count,
+        sum(cwb.number_achievements) as  number_achievements
+        from  crm_project as cp
+        right join  crm_workbench as cwb on cp.project_id =cwb.project_id
+        left join  sys_user as su on su.user_id =cwb.user_id
+        <where>
+            <if test="params.start_date!=null and params.start_date!=''">
+                and cwb.processing_date >=#{params.start_date}
+            </if>
+            <if test="params.end_date!=null and params.end_date!=''">
+                and cwb.processing_date &lt;= #{params.end_date}
+            </if>
+            <if test="params.projectId!=null and params.projectId!=''">
+                and cp.project_id = #{params.projectId}
+            </if>
+        </where>
+        group by cp.project_id,cwb.user_id
+    </select>
 
 
 </mapper>

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import io.renren.common.utils.PageUtils;
+import io.renren.modules.generator.dao.po.GraphicalStatisticsVo;
 import io.renren.modules.generator.entity.CrmWorkbenchEntity;
 import io.renren.modules.generator.entity.dto.ExcelWorkbenchDto;
 import io.renren.modules.generator.entity.vo.ChartVo;
@@ -52,5 +53,7 @@ public interface CrmWorkbenchService extends IService<CrmWorkbenchEntity> {
     List<ExcelWorkbenchDto> selectWorkbenchListPageLimit(Integer i, Integer i1,Integer iAll, Map<String, Object> params);
 
     List<List<ExcelWorkbenchDto>> getDataV2(String search) throws Exception;
+
+    List<GraphicalStatisticsVo> getGraphicStatisticsList(Map<String, Object> params, SysUserEntity user);
 }
 

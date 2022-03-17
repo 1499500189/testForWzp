@@ -11,7 +11,11 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.google.i18n.phonenumbers.Phonenumber;
 import com.google.i18n.phonenumbers.geocoding.PhoneNumberOfflineGeocoder;
 import io.renren.modules.app.utils.JwtUtils;
+import io.renren.modules.dynamic_object.ClassUtil;
+import io.renren.modules.dynamic_object.DynamicBean;
+import io.renren.modules.dynamic_object.GraphicalChartVo;
 import io.renren.modules.generator.dao.PhoneLocalDao;
+import io.renren.modules.generator.dao.po.GraphicalStatisticsVo;
 import io.renren.modules.generator.entity.CrmWorkbenchEntity;
 import io.renren.modules.generator.entity.TbTelnumInfoEntity;
 import io.renren.modules.generator.entity.dto.ExcelWorkbenchDto;
@@ -27,9 +31,11 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.Servlet;
+import java.lang.reflect.Field;
 import java.util.*;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.ForkJoinTask;
+import java.util.stream.Collectors;
 
 
 @RunWith(SpringRunner.class)
@@ -44,30 +50,44 @@ public class JwtTest {
     @Test
     @Transactional(readOnly = true)
     public void test() {
-        AlipayClient alipayClient = new DefaultAlipayClient("https://openapi.alipay.com/gateway.do","app_id","your private_key","json","GBK","alipay_public_key","RSA2");
-        AlipaySystemOauthTokenRequest request = new AlipaySystemOauthTokenRequest();
-        request.setGrantType("authorization_code");
-        request.setCode("4b203fe6c11548bcabd8da5bb087a83b");
-        request.setRefreshToken("201208134b203fe6c11548bcabd8da5bb087a83b");
-        AlipaySystemOauthTokenResponse response = null;
-        try {
-            response = alipayClient.execute(request);
-        } catch (AlipayApiException e) {
-            e.printStackTrace();
-        }
-        if(response.isSuccess()){
-            System.out.println("调用成功");
-        } else {
-            System.out.println("调用失败");
-        }
+
+        Integer s2 = 11;
+        Double i = s2 + (Double)null;
+        System.out.println(i);
+
     }
     @Test
     public  void  test2(){
-        QueryWrapper<TbTelnumInfoEntity> tbTelnumInfoEntityQueryWrapper = new QueryWrapper<>();
+        List<GraphicalStatisticsVo> graphicStatisticsList =  crmWorkbenchService.getGraphicStatisticsList(new HashMap<>(),null);
+        //获取到范围内需要展示的项目名称 。 生成的统计表单上面的动态列也是他的顺序 ，位置不变，方便动态生成类
+        List<String> collectProjectName = graphicStatisticsList.stream().map(GraphicalStatisticsVo::getProjectName).distinct().collect(Collectors.toList());
+        List<String> usernameAllList = graphicStatisticsList.stream().map(GraphicalStatisticsVo::getUsername).distinct().collect(Collectors.toList());
+        //用于动态生成类，需要将上面集合转换成set
+        Set<String> projectNameSet = new HashSet<>(collectProjectName);
+        HashMap tMap = null;
+        try {
+            tMap = new ClassUtil().dynamicObject(new GraphicalChartVo(), projectNameSet);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        //
+        DynamicBean dynamicBeans = new DynamicBean(tMap);
+        Field[] declaredFields = dynamicBeans.getObject().getClass().getDeclaredFields();
+       // Field[] fields = dynamicBeans.getClass().getFields();
+        for (Field f: declaredFields   ) {
+            System.out.println(f.getName());
+        }
+        try {
 
-        tbTelnumInfoEntityQueryWrapper.eq("mobile","1881451");
-        TbTelnumInfoEntity one = phoneInfoService.getOne(tbTelnumInfoEntityQueryWrapper);
-        System.out.println(one);
+            Field f = dynamicBeans.getObject().getClass().getDeclaredField("$cglib_prop_numberAchievements");
+            f.setAccessible(true);
+//            System.out.println(f.getName());
+//            f.set(dynamicBeans.getObject(),11);
+//            System.out.println(f.get(dynamicBeans.getObject()));
+         //   System.out.println(f.get);
+        } catch (NoSuchFieldException e /*| IllegalAccessException e*/) {
+            e.printStackTrace();
+        }
     }
 
 }

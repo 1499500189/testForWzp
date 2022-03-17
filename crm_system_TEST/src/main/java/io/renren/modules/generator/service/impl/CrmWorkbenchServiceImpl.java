@@ -7,6 +7,7 @@ import io.renren.common.utils.Constant;
 import io.renren.modules.employee.constant.ConstantRoles;
 import io.renren.modules.employee.entity.EmployeeInfoEntity;
 import io.renren.modules.employee.service.EmployeeInfoService;
+import io.renren.modules.generator.dao.po.GraphicalStatisticsVo;
 import io.renren.modules.generator.util.ExportExcelListener;
 import io.renren.modules.generator.entity.dto.ExcelSummaryStatisticsDto;
 import io.renren.modules.generator.entity.dto.ExcelWorkbenchDto;
@@ -305,5 +306,11 @@ return  null;
             return  null;
         }
         return resList;
+    }
+
+    @Override
+    public List<GraphicalStatisticsVo> getGraphicStatisticsList(Map<String, Object> params, SysUserEntity user) {
+        List<GraphicalStatisticsVo> c =  baseMapper.getGraphicStatisticsList(params);
+        return c;
     }
 }

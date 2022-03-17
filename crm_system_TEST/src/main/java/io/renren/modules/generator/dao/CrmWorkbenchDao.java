@@ -2,6 +2,7 @@ package io.renren.modules.generator.dao;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import io.renren.modules.generator.dao.po.GraphicalStatisticsVo;
 import io.renren.modules.generator.entity.CrmWorkbenchEntity;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import io.renren.modules.generator.entity.dto.ExcelWorkbenchDto;
@@ -34,4 +35,6 @@ public interface CrmWorkbenchDao extends BaseMapper<CrmWorkbenchEntity> {
     List<ChartVo> getSummaryListNoPage(@Param("params")Map<String, Object> params);
       //百万数据导出 的
     List<ExcelWorkbenchDto> selectWorkbenchListPageLimit(@Param("current") Integer current, @Param("size") Integer size ,@Param("iAll") Integer iAll,@Param("params")Map<String, Object> params);
+
+    List<GraphicalStatisticsVo> getGraphicStatisticsList(@Param("params") Map<String, Object> params);
 }
