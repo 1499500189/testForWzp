@@ -14,8 +14,8 @@ public class GraphicalChartVo {
   //  private List<AgentBusinessEntity> AgentBusiness =new ArrayList<>();//坐席业务数
   //  private StringBuilder agentBusiness=new StringBuilder();//坐席业务数
   //  private  Integer total = 0 ;  //总计
-    private  Integer total  ;  //总计
-    private   Double  numberAchievements ; //业绩数
-    private  String username ; //所属人
+    private  Integer total =11 ;  //总计
+    private   Double  numberAchievements =19d ; //业绩数
+    private  String username ="tom"; //所属人
 
 }

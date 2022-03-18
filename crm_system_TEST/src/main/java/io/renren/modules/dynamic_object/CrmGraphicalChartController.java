@@ -39,22 +39,48 @@ public class CrmGraphicalChartController extends AbstractController {
     private final String  CGLIB ="$cglib_prop_";
 
 
-
 //    /**
-//     * 获取到图标的展示列表
+//     * 获取到图标的展示列表 老方法，调整业务之前使用
 //     */
 //    @GetMapping("/list")
 //    @RequiresPermissions("generator:chart:list")
 //    @ApiOperation("获取到图表信息")
-//    @RelationFiled(attributeName="process",fields= {"startAudit","startAuditName"})
-//    @RequestMapping(value = "exportPdf")
 //    public R list(@RequestParam Map<String, Object> params) {
 //        SysUserEntity user = getUser();
 //
 //
+//        List<GraphicalStatisticsVo> graphicStatisticsList =  crmWorkbenchService.getGraphicStatisticsList(params,user);
+//        //获取到范围内需要展示的项目名称 。 生成的统计表单上面的动态列也是他的顺序 ，位置不变，方便动态生成类
+//        List<String> collectProjectName = graphicStatisticsList.stream().map(GraphicalStatisticsVo::getProjectName).distinct().collect(Collectors.toList());
 //
-//      //  return R.ok().put("chartList", graphicalList);
-//        return  null;
+//        //通过key value 方便之后拼接数据的时候找到对应的对象
+//        Map<String, GraphicalChartVo> stringGraphicalChartVoMap = new HashMap<>();
+//        for (String c: collectProjectName) {
+//            GraphicalChartVo graphicalChartVo = new GraphicalChartVo();
+//            graphicalChartVo.setProjectName(c);
+//            stringGraphicalChartVoMap.put(c,graphicalChartVo);
+//        }
+//        //拼接数据
+//        for (GraphicalStatisticsVo c: graphicStatisticsList) {
+//            String projectName = c.getProjectName();
+//            GraphicalChartVo graphicalChartVo = stringGraphicalChartVoMap.get(projectName);
+//            StringBuilder agentBusiness = graphicalChartVo.getAgentBusiness();
+//
+//            if (c.getUsername()!=null){
+//                agentBusiness.append(c.getUsername());
+//                agentBusiness.append("  ");
+//                agentBusiness.append(c.getCount()+"个;    \n\r");
+//            }
+//            Integer totalAfter = graphicalChartVo.getTotal()+c.getCount();
+//            graphicalChartVo.setTotal(totalAfter);
+//        }
+//
+//        //返回list集合
+//        List<GraphicalChartVo> graphicalList = new ArrayList<>();
+//        for (Map.Entry<String, GraphicalChartVo> entry : stringGraphicalChartVoMap.entrySet()) {
+//            graphicalList.add(entry.getValue());
+//        }
+//        return R.ok().put("chartList", graphicalList);
 //    }
     /**
      * 获取到图标的展示列表 ，新方法，调整业务之后使用
@@ -125,7 +151,7 @@ public class CrmGraphicalChartController extends AbstractController {
                 //todo 遍历其他的项目名称，进行设置
                 String projectName = g.getProjectName();
                 //当前套餐的项目名
-                //for (String s: collectProjectName) {
+
                     //md5加密 之后，获取属性防止乱码
                  String  name =CGLIB+ Md5.md5(projectName.getBytes());
                     Field filename = o.getClass().getDeclaredField(name);

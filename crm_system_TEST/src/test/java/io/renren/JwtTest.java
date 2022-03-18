@@ -51,10 +51,6 @@ public class JwtTest {
     @Transactional(readOnly = true)
     public void test() {
 
-        Integer s2 = 11;
-        Double i = s2 + (Double)null;
-        System.out.println(i);
-
     }
     @Test
     public  void  test2(){
@@ -62,32 +58,20 @@ public class JwtTest {
         //获取到范围内需要展示的项目名称 。 生成的统计表单上面的动态列也是他的顺序 ，位置不变，方便动态生成类
         List<String> collectProjectName = graphicStatisticsList.stream().map(GraphicalStatisticsVo::getProjectName).distinct().collect(Collectors.toList());
         List<String> usernameAllList = graphicStatisticsList.stream().map(GraphicalStatisticsVo::getUsername).distinct().collect(Collectors.toList());
+        HashMap<String,Object> tMap = null;
         //用于动态生成类，需要将上面集合转换成set
         Set<String> projectNameSet = new HashSet<>(collectProjectName);
-        HashMap tMap = null;
         try {
             tMap = new ClassUtil().dynamicObject(new GraphicalChartVo(), projectNameSet);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        //
-        DynamicBean dynamicBeans = new DynamicBean(tMap);
-        Field[] declaredFields = dynamicBeans.getObject().getClass().getDeclaredFields();
-       // Field[] fields = dynamicBeans.getClass().getFields();
-        for (Field f: declaredFields   ) {
-            System.out.println(f.getName());
+        for (Map.Entry<String, Object> entry : tMap.entrySet()) {
+            System.out.println(entry);
+            System.out.println(entry.getKey());
+            System.out.println(entry.getValue());
         }
-        try {
 
-            Field f = dynamicBeans.getObject().getClass().getDeclaredField("$cglib_prop_numberAchievements");
-            f.setAccessible(true);
-//            System.out.println(f.getName());
-//            f.set(dynamicBeans.getObject(),11);
-//            System.out.println(f.get(dynamicBeans.getObject()));
-         //   System.out.println(f.get);
-        } catch (NoSuchFieldException e /*| IllegalAccessException e*/) {
-            e.printStackTrace();
-        }
     }
 
 }

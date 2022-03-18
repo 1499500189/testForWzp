@@ -14,18 +14,15 @@ public class FileChannelDemo1 {
     //FileChannel读取数据到buffer中
     public static void main(String[] args) throws IOException {
         //创建FileChannel
-        RandomAccessFile aFile =new RandomAccessFile("d:\\d\\wzp.txt","rw");
+        RandomAccessFile aFile = new RandomAccessFile("d:\\d\\wzp.txt", "rw");
         FileChannel channel = aFile.getChannel();
         //创建Buffer
         ByteBuffer buf = ByteBuffer.allocate(1024);
         //读取数据到buffer中
         int byteRead = channel.read(buf);
-        while (byteRead!=-1){
-            System.out.println("读取了数据 ："+byteRead);
+        while (byteRead != -1) {
+            System.out.println("读取了数据 ：" + byteRead);
             buf.flip();
-            while (buf.hasRemaining()){
-                System.out.println((char)buf.get());
-            }
             buf.clear();
             byteRead = channel.read(buf);
         }
@@ -34,4 +31,31 @@ public class FileChannelDemo1 {
 
 
     }
+}
+
+class cc {
+
+    public static void main(String[] args) throws IOException {
+        //创建FileChannel
+        RandomAccessFile aFile = new RandomAccessFile("d:\\d\\wzp.txt", "rw");
+        FileChannel channel = aFile.getChannel();
+        //创建Buffer
+        ByteBuffer buf = ByteBuffer.allocate(1024);
+        //读取数据到buffer中
+        int byteRead = channel.read(buf);
+
+
+        System.out.println("读取了数据 ：" + byteRead);
+        buf.flip();
+        while (buf.hasRemaining()) {
+            System.out.println((char) buf.get());
+        }
+        buf.clear();
+        byteRead = channel.read(buf);
+
+        aFile.close();
+        System.out.println("数据处理完毕");
+    }
+
+
 }
