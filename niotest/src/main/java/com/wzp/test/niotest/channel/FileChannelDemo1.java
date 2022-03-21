@@ -3,8 +3,12 @@ package com.wzp.test.niotest.channel;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
+import java.nio.channels.SocketChannel;
+import java.util.Date;
+import java.util.Scanner;
 
 /**
  * @author
@@ -58,4 +62,27 @@ class cc {
     }
 
 
+}
+class A{
+
+    public static void main(String[] args)  throws  Exception{
+        //1.获取到通道，绑定主机和端口号
+        SocketChannel socketChannel = SocketChannel.open(new InetSocketAddress("localhost", 8080));
+        //2.切换到非阻塞
+        socketChannel.configureBlocking(false);
+        //3.创建buffer
+        ByteBuffer byteBuffer = ByteBuffer.allocate(1024);
+        //4.写入buffer数据
+        Scanner scanner = new Scanner(System.in);
+        while (scanner.hasNext()){
+            byteBuffer.put((new Date()+"------=>"+scanner.next()).toString().getBytes());
+            //5.切换模式
+            byteBuffer.flip();
+            //6，写入通道
+            socketChannel.write(byteBuffer);
+            //7.清空并且关闭
+            byteBuffer.clear();
+
+        }
+    }
 }
