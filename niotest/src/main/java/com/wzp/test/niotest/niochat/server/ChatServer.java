@@ -66,17 +66,17 @@ public class ChatServer {
     private void readOperator(Selector selector, SelectionKey selectionKey) throws IOException {
         //从selectionKey获取已经就绪的通道
         SocketChannel socketChannel = (SocketChannel) selectionKey.channel();
-        SelectableChannel channel = selectionKey.channel();
+       // SelectableChannel channel = selectionKey.channel();
         //2创建buffer
         ByteBuffer byteBuffer =ByteBuffer.allocate(1024);
         //3.循环读取客户端消息
         int readLength = socketChannel.read(byteBuffer);
         String message ="";
-        while (readLength>0){
+        if (readLength>0){
             //切换读模式
             byteBuffer.flip();
             //读取内容
-            message  +=   Charset.forName("UTF-8").decode(byteBuffer);
+            message+=Charset.forName("UTF-8").decode(byteBuffer);
 
         }
         //4.把channel注册到客户选择器上，监听可读状态
@@ -84,7 +84,33 @@ public class ChatServer {
         //5.把客户端发送消息，广播到其他的客户端中
         if (message.length()>0){
             System.out.println("进行广播操作");
+            System.out.println(message);
+            castOtherClient(message,selector,socketChannel);
+        }else {
+            System.out.println("feaf");
         }
+
+    }
+    //广播到其他客户端
+    private void castOtherClient(String message, Selector selector, SocketChannel socketChannel) {
+        //1。获取所有已经接入的客户端
+        Set<SelectionKey> selectionKeys = selector.keys();
+        for (SelectionKey selectionKey:selectionKeys) {
+            //获取到每个channel
+            Channel tarChannel = selectionKey.channel();
+            //不需要给自己发送
+            if (tarChannel instanceof  SocketChannel&& tarChannel!=socketChannel){
+                try {
+                    ((SocketChannel) tarChannel).write(Charset.forName("UTF-8").encode(message));
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }
+
+        //2.循环向所有channel里广播消息
 
     }
 
@@ -92,22 +118,22 @@ public class ChatServer {
     private void acceptOperatpr(ServerSocketChannel serverSocketChannel, Selector selector) throws IOException {
         //1接入状态，创建socketChannel
         SocketChannel socketChannel = serverSocketChannel.accept();
-        Socket socket = socketChannel.socket();
-        InetAddress inetAddress = socket.getInetAddress();
-        System.out.println(inetAddress.getAddress()+"===="+inetAddress.getHostAddress()+"==="+inetAddress.toString());
+       // Socket socket = socketChannel.socket();
+        //InetAddress inetAddress = socket.getInetAddress();
+        //System.out.println(inetAddress.getAddress()+"===="+inetAddress.getHostAddress()+"==="+inetAddress.toString());
         //2.把socketChannel设置非阻塞模式
         socketChannel.configureBlocking(false);
         //3.把channel注册到selector选择器上， 监听可读状态
         socketChannel.register(selector,SelectionKey.OP_READ);
         //4.客户端恢复信息
         socketChannel.write(Charset.forName("UTF-8").encode("欢迎进入聊天室，请注意隐私的安全"));
-
-
-
-
     }
-
+  //启动主方法
     public static void main(String[] args) {
-
+        try {
+            new ChatServer().startServer();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

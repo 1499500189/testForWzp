@@ -27,8 +27,8 @@ public class AsyncFileChannelDemo {
         ByteBuffer buffer = ByteBuffer.allocate(1024);
         buffer.put("wzp dd".getBytes());
         buffer.flip();
-        //3调用channel的read方法得到Future
-      fileChannel.write(buffer, 0, buffer, new CompletionHandler<Integer, ByteBuffer>() {
+        //3调用channel的read方法得到Future、
+        fileChannel.write(buffer, 0, buffer, new CompletionHandler<Integer, ByteBuffer>() {
             @Override
             public void completed(Integer result, ByteBuffer attachment) {
                 System.out.println("");
