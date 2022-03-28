@@ -1,6 +1,5 @@
 package com.wzp.test.spring注解驱动.config;
 
-import com.wzp.test.Person;
 import com.wzp.test.spring注解驱动.entity.Car;
 import com.wzp.test.spring注解驱动.entity.Person2;
 import org.springframework.context.annotation.Bean;

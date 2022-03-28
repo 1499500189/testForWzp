@@ -1,6 +1,6 @@
-package com.wzp.test.spring注解驱动;
+package com.wzp.test.spring注解驱动.test;
 
-import com.wzp.test.Person;
+import com.wzp.test.spring注解驱动.Person;
 import com.wzp.test.spring注解驱动.config.MainConfig;
 import com.wzp.test.spring注解驱动.config.MainConfig2;
 import com.wzp.test.spring注解驱动.config.MainConfigOfLifeCycle;

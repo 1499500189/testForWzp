@@ -1,5 +1,7 @@
 package com.wzp.test.spring注解驱动.controller;
 
+import com.wzp.test.spring注解驱动.service.BookService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 /**
@@ -8,7 +10,8 @@ import org.springframework.stereotype.Controller;
  */
 @Controller
 public class BookController {
-
+   @Autowired
+   private BookService bookService;
     public  void test(){
 
         System.out.println("sdadad   sdad");

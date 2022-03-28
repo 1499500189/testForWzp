@@ -1,6 +1,6 @@
 package com.wzp.test.spring注解驱动.config;
 
-import com.wzp.test.Person;
+import com.wzp.test.spring注解驱动.Person;
 
 import com.wzp.test.spring注解驱动.TypeFilter.MyTypeFilter;
 import org.springframework.context.annotation.Bean;

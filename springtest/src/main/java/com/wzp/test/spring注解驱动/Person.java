@@ -1,4 +1,4 @@
-package com.wzp.test;
+package com.wzp.test.spring注解驱动;
 
 /**
  * @author
