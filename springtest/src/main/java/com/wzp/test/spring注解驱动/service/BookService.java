@@ -2,7 +2,10 @@ package com.wzp.test.spring注解驱动.service;
 
 import com.wzp.test.spring注解驱动.dao.BookDao;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
 
 /**
  * @author
@@ -10,8 +13,10 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class BookService {
-     @Autowired
-    private BookDao bookDao;
+
+     @Resource(name = "bookDao2")
+     //@Inject
+    public BookDao bookDao;
 
     @Override
     public String toString() {

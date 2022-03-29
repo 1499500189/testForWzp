@@ -1,5 +1,6 @@
 package com.wzp.test.spring注解驱动.dao;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -8,7 +9,8 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public class BookDao {
-    private  String name;
+  /*  @Value("cc")*/
+    private  String name ="ccs";
 
     public String getName() {
         return name;
@@ -16,5 +18,12 @@ public class BookDao {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return "BookDao{" +
+                "name='" + name + '\'' +
+                '}';
     }
 }

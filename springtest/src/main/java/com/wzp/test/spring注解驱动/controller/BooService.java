@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
  * @author
  * @date 2022 年 03 月 28 日
  */
-@Service
+@Service("bookService2")
 public class BooService extends BookService {
     @Autowired
     private BookDao bookDao;
