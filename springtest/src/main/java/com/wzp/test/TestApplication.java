@@ -1,15 +1,18 @@
 package com.wzp.test;
 
+import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-//@SpringBootApplication
+@SpringBootApplication
 public class TestApplication {
 
 
-    /*public static void main(String[] args) {
+    public static void main(String[] args) {
         SpringApplication.run(TestApplication.class, args);
+    }
 
-*//*
+
+/*
 
         AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext(MainConfig.class);
         Person bean = applicationContext.getBean(Person.class);
