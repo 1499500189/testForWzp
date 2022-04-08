@@ -27,6 +27,7 @@ public class CrmWorkloadEntity implements Serializable {
 	/**
 	 * 工作量汇报表的id
 	 */
+	
 	@TableId
 	private Long id;
 	/**

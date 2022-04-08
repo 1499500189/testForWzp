@@ -63,9 +63,6 @@ public class JwtTest {
         crmWorkbenchEntity.setTelephone("111");
         crmWorkbenchService.save(crmWorkbenchEntity);*/
         CrmWorkloadEntity crmWorkloadEntity = new CrmWorkloadEntity();
-        crmWorkloadEntity.setExhaledVolume(111);
-        crmWorkloadService.save(crmWorkloadEntity);
-        CrmCategoryEntity categoryEntity = new CrmCategoryEntity();
 
     }
 

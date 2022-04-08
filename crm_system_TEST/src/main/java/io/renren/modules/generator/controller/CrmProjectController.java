@@ -10,6 +10,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.renren.common.annotation.SysLog;
 import io.renren.modules.generator.entity.CrmCategoryEntity;
 import io.renren.modules.generator.service.CrmCategoryService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
