@@ -39,7 +39,7 @@ public interface CrmWorkbenchService extends IService<CrmWorkbenchEntity> {
     void updateWorkbenchEntity(CrmWorkbenchEntity crmWorkbench, SysUserEntity user);
 
     void saveWorkbenchEntity(CrmWorkbenchEntity crmWorkbench, SysUserEntity user);
-
+    void saveWorkbenchEntity();
     IPage<ChartVo> getSummaryList(Map<String, Object> params, SysUserEntity user);
 
     void doSomething(CrmWorkbenchEntity crmWorkbench, SysUserEntity user) throws InterruptedException;

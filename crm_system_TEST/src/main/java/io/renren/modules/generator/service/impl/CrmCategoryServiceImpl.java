@@ -1,5 +1,6 @@
 package io.renren.modules.generator.service.impl;
 
+import org.junit.Test;
 import org.springframework.stereotype.Service;
 import java.util.Map;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -11,6 +12,8 @@ import io.renren.common.utils.Query;
 import io.renren.modules.generator.dao.CrmCategoryDao;
 import io.renren.modules.generator.entity.CrmCategoryEntity;
 import io.renren.modules.generator.service.CrmCategoryService;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @Service("crmCategoryService")
@@ -24,6 +27,14 @@ public class CrmCategoryServiceImpl extends ServiceImpl<CrmCategoryDao, CrmCateg
         );
 
         return new PageUtils(page);
+    }
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Override
+    public void saveWork() {
+        CrmCategoryEntity categoryEntity = new CrmCategoryEntity();
+        categoryEntity.setCategoryName("dsa");
+        baseMapper.insert(categoryEntity);
+        int i =1/0 ;
     }
 
 }

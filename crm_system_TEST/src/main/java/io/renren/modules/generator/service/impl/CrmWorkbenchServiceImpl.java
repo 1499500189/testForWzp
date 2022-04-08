@@ -17,6 +17,7 @@ import io.renren.modules.generator.entity.vo.ChartVo;
 import io.renren.modules.generator.service.CrmCategoryService;
 import io.renren.modules.generator.service.CrmProjectService;
 import io.renren.modules.milliondataexport.exportexcel.RunThread;
+import io.renren.modules.springdatatest.hello.CrmCategory;
 import io.renren.modules.sys.entity.SysUserEntity;
 import io.renren.modules.sys.service.SysRoleService;
 import io.renren.modules.sys.service.SysUserRoleService;
@@ -313,4 +314,24 @@ return  null;
         List<GraphicalStatisticsVo> c =  baseMapper.getGraphicStatisticsList(params);
         return c;
     }
+
+     @Override
+     @Transactional()
+    public void saveWorkbenchEntity() {
+        CrmWorkbenchEntity crmWorkbenchEntity = new CrmWorkbenchEntity();
+        crmWorkbenchEntity.setId(1001L);
+        crmWorkbenchEntity.setTelephone("111");
+        baseMapper.insert(crmWorkbenchEntity);
+        crmCategoryService.saveWork();
+      int i=1/0;
+    }
+    @Transactional(propagation =Propagation.REQUIRES_NEW)
+    public void  saveWork(){
+        CrmCategoryEntity categoryEntity = new CrmCategoryEntity();
+        categoryEntity.setCategoryName("dsa");
+        crmCategoryService.save(categoryEntity);
+        int i =1/0 ;
+    }
+
+
 }

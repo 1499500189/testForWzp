@@ -16,5 +16,8 @@ import java.util.Map;
 public interface CrmCategoryService extends IService<CrmCategoryEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+    void saveWork();
+
 }
 
