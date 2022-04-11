@@ -29,7 +29,6 @@ public class  User {
     public void setId(Integer id) {
         Id = id;
     }
-
     @Nullable
     private  String username;
     @NotNull

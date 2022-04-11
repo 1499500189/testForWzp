@@ -51,6 +51,16 @@
             <artifactId>spring-aspects</artifactId>
             <version>4.0.9.RELEASE</version>
         </dependency>
+        <!--spring 5测试需要的 reactor响应式编程的依赖-->
+        <dependency>
+            <groupId>io.projectreactor</groupId>
+            <artifactId>reactor-core</artifactId>
+            <version>3.1.5.RELEASE</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webflux</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-jdbc</artifactId>

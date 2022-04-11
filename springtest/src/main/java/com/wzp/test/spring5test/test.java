@@ -17,10 +17,13 @@ public class test {
         String username = user.getUsername();
         System.out.println(username);
 
+          user.setUsername(null);
+          user.setId(null);
         Integer id = user.getId();
         System.out.println(id);
         Local local = user.getLocal();
         String localName = local.getLocalName();
         System.out.println(localName);
+
     }
 }

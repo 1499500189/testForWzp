@@ -33,6 +33,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import javax.servlet.Servlet;
 import java.lang.reflect.Field;
@@ -40,6 +42,7 @@ import java.util.*;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.ForkJoinTask;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 @RunWith(SpringRunner.class)
@@ -57,13 +60,17 @@ public class JwtTest {
     private CrmCategoryService crmCategoryService;
     @Test
     public  void  test2(){
-     //  crmWorkbenchService.saveWorkbenchEntity();
-/*        CrmWorkbenchEntity crmWorkbenchEntity = new CrmWorkbenchEntity();
-        crmWorkbenchEntity.setId(1001L);
-        crmWorkbenchEntity.setTelephone("111");
-        crmWorkbenchService.save(crmWorkbenchEntity);*/
-        CrmWorkloadEntity crmWorkloadEntity = new CrmWorkloadEntity();
 
+                //just方法直接声明
+                Flux.just(1,2,3,4);
+                Mono.just(1);
+                //其他的方法
+                Integer[] array = {1,2,3,4};
+                Flux.fromArray(array);
+
+                List<Integer> list = Arrays.asList(array);
+                Stream<Integer> stream = list.stream();
+                Flux.fromStream(stream);
     }
 
 }
